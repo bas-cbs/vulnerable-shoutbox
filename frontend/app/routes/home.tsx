@@ -57,11 +57,24 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <h1>Shoutbox</h1>
         </header>
         <div className="max-w-[800px] w-full space-y-6 px-4 rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4">
-          <form onSubmit={handleNewPost}>
-            <label for="fname">New Shout:</label>
-            <input type="text" id="shout" name="shout" />
-            <input type="submit" value="Post Shout" />
-          </form>
+          <div className="flex justify-center">
+            <form
+              onSubmit={handleNewPost}
+              className="flex flex-col gap-3 w-full max-w-md"
+            >
+              <input
+                type="text"
+                id="shout"
+                name="shout"
+                className="px-4 py-2 border border-gray-300 rounded-lg"
+              />
+              <input
+                type="submit"
+                value="Post Shout"
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg"
+              />
+            </form>
+          </div>
           <Posts postData={posts} />
         </div>
       </div>
