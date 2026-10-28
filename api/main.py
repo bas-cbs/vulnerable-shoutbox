@@ -1,3 +1,5 @@
+import sqlite3
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -16,24 +18,50 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-NOT_A_DB = [
-    {"user": "janine", "content": "hello world"},
-    {"user": "bertrand", "content": "nice"},
-    {"user": "jan", "content": "cool post"},
-]
-
-
 class Post(BaseModel):
     user: str
     content: str
 
 
+def create_db_and_tables():
+    with open("./sql/create_tables.sql", "r") as f:
+        sql_commands = f.read()
+
+    with sqlite3.connect("db.sqlite") as conn:
+        conn.executescript(sql_commands)
+        conn.commit()
+
+
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
+
+
 @app.get("/posts")
 async def posts():
-    return NOT_A_DB
+    with sqlite3.connect("db.sqlite") as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM posts")
+
+        return [dict(row) for row in cursor.fetchall()]
 
 
 @app.post("/post/create")
 async def create_post(post: Post):
     if post:
-        NOT_A_DB.append({"user": post.user, "content": post.content})
+        with sqlite3.connect("db.sqlite") as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute(
+                f"INSERT INTO posts (user, content) VALUES ('{post.user}', '{post.content}');"
+            )
+
+
+@app.delete("/post/{id}")
+async def delete_post(id: int):
+    if id:
+        with sqlite3.connect("db.sqlite") as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute(f"DELETE FROM posts WHERE id={id};")
