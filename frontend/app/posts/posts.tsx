@@ -1,4 +1,8 @@
+import { useState } from "react";
+
 export function Posts({ postData, deletePost, editPost }) {
+  const [editPostId, setEditPostId] = useState(null);
+
   function handleEdit({ id, e }) {
     e.preventDefault();
 
@@ -8,6 +12,7 @@ export function Posts({ postData, deletePost, editPost }) {
 
     if (postContent) {
       editPost({ id: id, content: postContent });
+      setEditPostId(null);
     }
   }
 
@@ -16,12 +21,29 @@ export function Posts({ postData, deletePost, editPost }) {
       {postData.map(({ id, user, content }) => (
         <li key={id}>
           <div className="rounded border border-gray-200 space-y-4 p-4">
-            <b>{user}</b>: {content}{" "}
-            <button onClick={() => deletePost({ id: id })}>delete</button>
-            <form onSubmit={(e) => handleEdit({ id: id, e: e })}>
-              <input type="text" id="post" name="post" defaultValue={content} />
-              <input type="submit" value="Submit" />
-            </form>
+            {editPostId === id ? (
+              <div>
+                <b>{user}</b>:
+                <form onSubmit={(e) => handleEdit({ id: id, e: e })}>
+                  <input
+                    type="text"
+                    id="post"
+                    name="post"
+                    defaultValue={content}
+                  />
+                  <input type="submit" value="Submit" />
+                </form>
+                <button onClick={() => setEditPostId(null)}>cancel edit</button>
+              </div>
+            ) : (
+              <div>
+                <p>
+                  <b>{user}</b>: {content}
+                </p>
+                <button onClick={() => setEditPostId(id)}>edit</button>
+                <button onClick={() => deletePost({ id: id })}>delete</button>
+              </div>
+            )}
           </div>
         </li>
       ))}
