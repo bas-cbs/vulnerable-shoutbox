@@ -27,7 +27,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   const [posts, setPosts] = useState(loaderData);
 
   async function createPost({ user, body }) {
-    fetch("http://localhost:8000/post/create", {
+    await fetch("http://localhost:8000/post/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   }
 
   async function deletePost({ id }) {
-    fetch(`http://localhost:8000/post/${id}`, {
+    await fetch(`http://localhost:8000/post/${id}`, {
       method: "DELETE",
     });
 
@@ -47,7 +47,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   }
 
   async function editPost({ id, content }) {
-    fetch(`http://localhost:8000/post/${id}`, {
+    await fetch(`http://localhost:8000/post/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
