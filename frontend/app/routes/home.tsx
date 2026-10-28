@@ -7,15 +7,14 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   return product;
 }
 
-// HydrateFallback is rendered while the client loader is running
 export function HydrateFallback() {
   return <div>Loading...</div>;
 }
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Shoutbox" },
+    { name: "description", content: "Shout whatever you want!" },
   ];
 }
 
