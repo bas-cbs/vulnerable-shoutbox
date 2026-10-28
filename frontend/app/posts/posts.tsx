@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Pencil, Trash, X, Check, Send } from "lucide-react";
 
 export function Posts({ postData, deletePost, editPost }) {
   const [editPostId, setEditPostId] = useState(null);
@@ -22,26 +23,40 @@ export function Posts({ postData, deletePost, editPost }) {
         <li key={id}>
           <div className="rounded border border-gray-200 space-y-4 p-4">
             {editPostId === id ? (
-              <div>
-                <b>{user}</b>:
+              <div className="flex justify-between items-center">
                 <form onSubmit={(e) => handleEdit({ id: id, e: e })}>
-                  <input
-                    type="text"
-                    id="post"
-                    name="post"
-                    defaultValue={content}
-                  />
-                  <input type="submit" value="Submit" />
+                  <span>
+                    <b>{user}</b>:&nbsp;
+                    <input
+                      type="text"
+                      id="post"
+                      name="post"
+                      defaultValue={content}
+                    />
+                  </span>
                 </form>
-                <button onClick={() => setEditPostId(null)}>cancel edit</button>
+                <span>
+                  <button type="submit">
+                    <Check />
+                  </button>
+                  <button onClick={() => setEditPostId(null)}>
+                    <X />
+                  </button>
+                </span>
               </div>
             ) : (
-              <div>
-                <p>
+              <div className="flex justify-between items-center">
+                <span>
                   <b>{user}</b>: {content}
-                </p>
-                <button onClick={() => setEditPostId(id)}>edit</button>
-                <button onClick={() => deletePost({ id: id })}>delete</button>
+                </span>
+                <span>
+                  <button onClick={() => setEditPostId(id)}>
+                    <Pencil />
+                  </button>
+                  <button onClick={() => deletePost({ id: id })}>
+                    <Trash />
+                  </button>
+                </span>
               </div>
             )}
           </div>
@@ -75,11 +90,12 @@ export function CreatePost({ createPost }) {
         name="post"
         className="px-4 py-2 border border-gray-300 rounded-lg"
       />
-      <input
+      <button
         type="submit"
-        value="Post Shout"
         className="px-6 py-2 bg-blue-600 text-white rounded-lg"
-      />
+      >
+        <Send />
+      </button>
     </form>
   );
 }
