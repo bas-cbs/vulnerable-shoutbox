@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { Posts } from "../posts/posts";
+import { Posts, CreatePost } from "../posts/posts";
 import { useState } from "react";
 
 export async function getPosts() {
@@ -26,18 +26,6 @@ export function meta({}: Route.MetaArgs) {
 export default function Home({ loaderData }: Route.ComponentProps) {
   const [posts, setPosts] = useState(loaderData);
 
-  function handleNewPost(e) {
-    e.preventDefault();
-
-    const form = e.target;
-    const formData = new FormData(form);
-    const postContent = formData.get("shout");
-
-    if (postContent) {
-      createPost({ user: "anonymous", body: postContent });
-    }
-  }
-
   async function createPost({ user, body }) {
     fetch("http://localhost:8000/post/create", {
       method: "POST",
@@ -58,22 +46,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </header>
         <div className="max-w-[800px] w-full space-y-6 px-4 rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4">
           <div className="flex justify-center">
-            <form
-              onSubmit={handleNewPost}
-              className="flex flex-col gap-3 w-full max-w-md"
-            >
-              <input
-                type="text"
-                id="shout"
-                name="shout"
-                className="px-4 py-2 border border-gray-300 rounded-lg"
-              />
-              <input
-                type="submit"
-                value="Post Shout"
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg"
-              />
-            </form>
+            <CreatePost createPost={createPost} />
           </div>
           <Posts postData={posts} />
         </div>
