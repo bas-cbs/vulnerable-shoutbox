@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { Posts } from "../posts/posts";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const res = await fetch("http://localhost:8000/posts");
@@ -27,7 +27,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <h1>Shoutbox</h1>
         </header>
         <div className="max-w-[800px] w-full space-y-6 px-4 rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4">
-          <Welcome postData={loaderData} />
+          <Posts postData={loaderData} />
         </div>
       </div>
     </main>

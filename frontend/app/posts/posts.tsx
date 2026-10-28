@@ -1,4 +1,4 @@
-export function Welcome({ postData }) {
+export function Posts({ postData }) {
   return (
     <ul>
       {postData.map(({ user, content }) => (
