@@ -1,9 +1,7 @@
 import type { Route } from "./+types/home";
 import { Welcome } from "../welcome/welcome";
 
-export async function clientLoader({
-  params,
-}: Route.ClientLoaderArgs) {
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const res = await fetch("http://localhost:8000/posts");
   const product = await res.json();
   return product;
@@ -21,6 +19,6 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Home({loaderData}: Route.ComponentProps) {
-  return <Welcome postData={loaderData}/>;
+export default function Home({ loaderData }: Route.ComponentProps) {
+  return <Welcome postData={loaderData} />;
 }
