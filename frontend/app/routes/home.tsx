@@ -22,9 +22,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home({loaderData}: Route.ComponentProps) {
-	console.log("loaderData:", loaderData);
-	loaderData.map(({postid, content}) => (
-		console.log(content)
-	))
-  return <Welcome />;
+  return <Welcome postData={loaderData}/>;
 }
