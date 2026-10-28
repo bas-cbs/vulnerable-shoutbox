@@ -1,8 +1,6 @@
 from fastapi import FastAPI
-
-app = FastAPI()
-
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -18,11 +16,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+NOT_A_DB = [
+    {"user": "janine", "content": "hello world"},
+    {"user": "bertrand", "content": "nice"},
+    {"user": "jan", "content": "cool post"},
+]
+
+
+class Post(BaseModel):
+    user: str
+    content: str
+
 
 @app.get("/posts")
 async def posts():
-    return [
-        {"user": "Janine", "content": "Hello World"},
-        {"user": "Bertrand", "content": "Nice"},
-        {"user": "Jan", "content": "Cool post"},
-    ]
+    return NOT_A_DB
+
+
+@app.post("/post/create")
+async def create_post(post: Post):
+    if post:
+        NOT_A_DB.append({"user": post.user, "content": post.content})

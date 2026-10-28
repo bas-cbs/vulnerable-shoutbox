@@ -1,10 +1,15 @@
 import type { Route } from "./+types/home";
 import { Posts } from "../posts/posts";
+import { useState } from "react";
+
+export async function getPosts() {
+  const res = await fetch("http://localhost:8000/posts");
+  const posts = await res.json();
+  return posts;
+}
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-  const res = await fetch("http://localhost:8000/posts");
-  const product = await res.json();
-  return product;
+  return getPosts();
 }
 
 export function HydrateFallback() {
@@ -19,6 +24,20 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
+  const [posts, setPosts] = useState(loaderData);
+
+  async function createPost({ user, body }) {
+    fetch("http://localhost:8000/post/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ user: "testuser", content: "testcontent" }),
+    });
+
+    setPosts(await getPosts());
+  }
+
   return (
     <main className="flex items-center justify-center pt-16 pb-4">
       <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
@@ -26,7 +45,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <h1>Shoutbox</h1>
         </header>
         <div className="max-w-[800px] w-full space-y-6 px-4 rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4">
-          <Posts postData={loaderData} />
+          <button onClick={createPost}>Create New Post</button>
+          <Posts postData={posts} />
         </div>
       </div>
     </main>
