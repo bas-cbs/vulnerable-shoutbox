@@ -7,12 +7,11 @@ export function Welcome({ postData }) {
         </header>
         <div className="max-w-[800px] w-full space-y-6 px-4">
           <nav className="rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4">
-            <h1>Posts</h1>
             <ul>
-              {postData.map(({ postid, content }) => (
+              {postData.map(({ user, content }) => (
                 <li>
                   <div className="rounded border border-gray-200 space-y-4 p-4">
-                    {postid}: {content}
+                    <b>{user}</b>: {content}
                   </div>
                 </li>
               ))}
