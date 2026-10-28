@@ -11,7 +11,9 @@ export function Welcome({ postData }) {
             <ul>
               {postData.map(({ postid, content }) => (
                 <li>
-                  {postid}: {content}
+                  <div className="rounded border border-gray-200 space-y-4 p-4">
+                    {postid}: {content}
+                  </div>
                 </li>
               ))}
             </ul>
