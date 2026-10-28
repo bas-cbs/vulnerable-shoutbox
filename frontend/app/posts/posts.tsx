@@ -80,22 +80,18 @@ export function CreatePost({ createPost }) {
   }
 
   return (
-    <form
-      onSubmit={handleNewPost}
-      className="flex flex-col gap-3 w-full max-w-md"
-    >
-      <input
-        type="text"
-        id="post"
-        name="post"
-        className="px-4 py-2 border border-gray-300 rounded-lg"
-      />
-      <button
-        type="submit"
-        className="px-6 py-2 bg-blue-600 text-white rounded-lg"
-      >
-        <Send />
-      </button>
+    <form onSubmit={handleNewPost}>
+      <div className="flex gap-2">
+        <input
+          type="text"
+          id="post"
+          name="post"
+          className="border border-gray-300"
+        />
+        <button type="submit">
+          <Send />
+        </button>
+      </div>
     </form>
   );
 }
