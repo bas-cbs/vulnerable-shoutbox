@@ -23,8 +23,8 @@ export function Posts({ postData, deletePost, editPost }) {
         <li key={id}>
           <div className="rounded border border-gray-200 space-y-4 p-4">
             {editPostId === id ? (
-              <div className="flex justify-between items-center">
-                <form onSubmit={(e) => handleEdit({ id: id, e: e })}>
+              <form onSubmit={(e) => handleEdit({ id: id, e: e })}>
+                <div className="flex justify-between items-center">
                   <span>
                     <b>{user}</b>:&nbsp;
                     <input
@@ -34,16 +34,16 @@ export function Posts({ postData, deletePost, editPost }) {
                       defaultValue={content}
                     />
                   </span>
-                </form>
-                <span>
-                  <button type="submit">
-                    <Check />
-                  </button>
-                  <button onClick={() => setEditPostId(null)}>
-                    <X />
-                  </button>
-                </span>
-              </div>
+                  <span>
+                    <button type="submit">
+                      <Check />
+                    </button>
+                    <button onClick={() => setEditPostId(null)}>
+                      <X />
+                    </button>
+                  </span>
+                </div>
+              </form>
             ) : (
               <div className="flex justify-between items-center">
                 <span>
