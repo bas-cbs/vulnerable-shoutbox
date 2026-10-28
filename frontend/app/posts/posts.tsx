@@ -1,10 +1,11 @@
-export function Posts({ postData }) {
+export function Posts({ postData, deletePost }) {
   return (
     <ul>
-      {postData.map(({ user, content }) => (
+      {postData.map(({ id, user, content }) => (
         <li>
           <div className="rounded border border-gray-200 space-y-4 p-4">
-            <b>{user}</b>: {content}
+            <b>{user}</b>: {content}{" "}
+            <button onClick={() => deletePost({ id: id })}>delete</button>
           </div>
         </li>
       ))}
