@@ -1,11 +1,27 @@
-export function Posts({ postData, deletePost }) {
+export function Posts({ postData, deletePost, editPost }) {
+  function handleEdit({ id, e }) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const postContent = formData.get("post");
+
+    if (postContent) {
+      editPost({ id: id, content: postContent });
+    }
+  }
+
   return (
     <ul>
       {postData.map(({ id, user, content }) => (
-        <li>
+        <li key={id}>
           <div className="rounded border border-gray-200 space-y-4 p-4">
             <b>{user}</b>: {content}{" "}
             <button onClick={() => deletePost({ id: id })}>delete</button>
+            <form onSubmit={(e) => handleEdit({ id: id, e: e })}>
+              <input type="text" id="post" name="post" defaultValue={content} />
+              <input type="submit" value="Submit" />
+            </form>
           </div>
         </li>
       ))}

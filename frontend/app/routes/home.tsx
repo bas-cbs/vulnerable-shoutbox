@@ -46,6 +46,18 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     setPosts(await getPosts());
   }
 
+  async function editPost({ id, content }) {
+    fetch(`http://localhost:8000/post/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: content }),
+    });
+
+    setPosts(await getPosts());
+  }
+
   return (
     <main className="flex items-center justify-center pt-16 pb-4">
       <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
@@ -56,7 +68,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <div className="flex justify-center">
             <CreatePost createPost={createPost} />
           </div>
-          <Posts postData={posts} deletePost={deletePost} />
+          <Posts postData={posts} deletePost={deletePost} editPost={editPost} />
         </div>
       </div>
     </main>
