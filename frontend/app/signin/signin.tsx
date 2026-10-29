@@ -61,6 +61,14 @@ export function SignIn() {
     }
   }
 
+  function handleSignOut() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
+    setToken(null);
+    setUserInfo({});
+  }
+
   return (
     <div>
       {token ? (
@@ -68,7 +76,7 @@ export function SignIn() {
           <p>
             {userInfo.username} - {userInfo.email}
           </p>
-          <button onClick={() => setToken(null)}>Sign out</button>
+          <button onClick={handleSignOut}>Sign out</button>
         </div>
       ) : (
         <form onSubmit={handleSignIn}>
