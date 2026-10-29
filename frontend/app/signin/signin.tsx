@@ -2,6 +2,20 @@ import { useState } from "react";
 
 export function SignIn({ createPost }) {
   const [token, setToken] = useState(null);
+  const [userInfo, setUserInfo] = useState({});
+
+  async function getUserInfo({ token }) {
+    const res = await fetch("http://localhost:8000/userinfo", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const userinfo = await res.json();
+
+    setUserInfo({ username: userinfo.username, email: userinfo.email });
+  }
 
   async function getToken({ user, password }) {
     const params = new URLSearchParams();
@@ -21,7 +35,7 @@ export function SignIn({ createPost }) {
     return token.access_token;
   }
 
-  async function handleNewPost(e) {
+  async function handleSignIn(e) {
     e.preventDefault();
 
     const form = e.target;
@@ -35,6 +49,7 @@ export function SignIn({ createPost }) {
       if (token) {
         setToken(token);
         localStorage.setItem("token", token);
+        getUserInfo({ token: token });
       }
     }
   }
@@ -42,9 +57,14 @@ export function SignIn({ createPost }) {
   return (
     <div>
       {token ? (
-        <button onClick={() => setToken(null)}>Logout</button>
+        <div>
+          <p>
+            {userInfo.username} - {userInfo.email}
+          </p>
+          <button onClick={() => setToken(null)}>Sign out</button>
+        </div>
       ) : (
-        <form onSubmit={handleNewPost}>
+        <form onSubmit={handleSignIn}>
           <input
             type="text"
             id="user"
@@ -57,7 +77,7 @@ export function SignIn({ createPost }) {
             name="password"
             className="border border-gray-300"
           />
-          <button type="submit">Login</button>
+          <button type="submit">Sign in</button>
         </form>
       )}
     </div>
