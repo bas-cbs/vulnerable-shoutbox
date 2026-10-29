@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pencil, Trash, X, Check, Send } from "lucide-react";
 
-export function Posts({ postData, deletePost, editPost }) {
+export function Posts({ postData, deletePost, editPost, userInfo }) {
   const [editPostId, setEditPostId] = useState(null);
 
   function handleEdit({ id, e }) {
@@ -49,14 +49,16 @@ export function Posts({ postData, deletePost, editPost }) {
                 <span>
                   <b>{user}</b>: {content}
                 </span>
-                <span>
-                  <button onClick={() => setEditPostId(id)}>
-                    <Pencil />
-                  </button>
-                  <button onClick={() => deletePost({ id: id })}>
-                    <Trash />
-                  </button>
-                </span>
+                {userInfo.username == user && (
+                  <span>
+                    <button onClick={() => setEditPostId(id)}>
+                      <Pencil />
+                    </button>
+                    <button onClick={() => deletePost({ id: id })}>
+                      <Trash />
+                    </button>
+                  </span>
+                )}
               </div>
             )}
           </div>

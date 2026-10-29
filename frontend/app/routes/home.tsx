@@ -85,7 +85,12 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <div className="flex justify-center">
             <CreatePost createPost={createPost} />
           </div>
-          <Posts postData={posts} deletePost={deletePost} editPost={editPost} />
+          <Posts
+            postData={posts}
+            deletePost={deletePost}
+            editPost={editPost}
+            userInfo={userInfo}
+          />
         </div>
       </div>
     </main>
