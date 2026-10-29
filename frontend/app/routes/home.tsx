@@ -70,20 +70,23 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   }
 
   return (
-    <main className="flex items-center justify-center pt-16 pb-4">
-      <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
-        <header className="flex flex-col items-center gap-9">
-          <h1>Shoutbox</h1>
+    <main className="pt-16">
+      <div className="flex flex-col items-center gap-8">
+        <header>
+          <h1 className="font-mono text-3xl italic">shoutbox</h1>
         </header>
-        <div className="max-w-[800px] w-full space-y-6 px-4 rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4">
-          <SignIn
-            token={token}
-            setToken={setToken}
-            userInfo={userInfo}
-            setUserInfo={setUserInfo}
-          />
-          <div className="flex justify-center">
-            <CreatePost createPost={createPost} />
+        <SignIn
+          token={token}
+          setToken={setToken}
+          userInfo={userInfo}
+          setUserInfo={setUserInfo}
+        />
+        <div className="max-w-[800px] w-full rounded-3xl border border-gray-200 p-6 space-y-4">
+          <div className="rounded border border-gray-200 space-y-4 p-4">
+            <span className="flex flex-row items-center">
+              <b>{userInfo.username ?? "anonymous"}</b>:&nbsp;
+              <CreatePost createPost={createPost} />
+            </span>
           </div>
           <Posts
             postData={posts}

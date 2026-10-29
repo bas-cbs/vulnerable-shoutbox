@@ -18,7 +18,7 @@ export function Posts({ postData, deletePost, editPost, userInfo }) {
   }
 
   return (
-    <ul>
+    <ul className="space-y-3">
       {postData.map(({ id, user, content }) => (
         <li key={id}>
           <div className="rounded border border-gray-200 space-y-4 p-4">
@@ -88,7 +88,8 @@ export function CreatePost({ createPost }) {
           type="text"
           id="post"
           name="post"
-          className="border border-gray-300"
+          placeholder="msg text"
+          className="border border-gray-300 y-2 p-2"
         />
         <button type="submit">
           <Send />

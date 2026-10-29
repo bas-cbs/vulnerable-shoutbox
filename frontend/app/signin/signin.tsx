@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { LogIn, LogOut } from "lucide-react";
 
 export function SignIn({ token, setToken, userInfo, setUserInfo }) {
   async function getUserInfo({ token }) {
@@ -66,27 +67,35 @@ export function SignIn({ token, setToken, userInfo, setUserInfo }) {
   return (
     <div>
       {token ? (
-        <div>
+        <div className="flex gap-2">
           <p>
-            {userInfo.username} - {userInfo.email}
+            Signed in as: <b>{userInfo.username}</b> - {userInfo.email}
           </p>
-          <button onClick={handleSignOut}>Sign out</button>
+          <button onClick={handleSignOut}>
+            <LogOut />
+          </button>
         </div>
       ) : (
         <form onSubmit={handleSignIn}>
-          <input
-            type="text"
-            id="user"
-            name="user"
-            className="border border-gray-300"
-          />
-          <input
-            type="text"
-            id="password"
-            name="password"
-            className="border border-gray-300"
-          />
-          <button type="submit">Sign in</button>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              id="user"
+              name="user"
+              placeholder="username"
+              className="border border-gray-300 y-2 p-2"
+            />
+            <input
+              type="text"
+              id="password"
+              name="password"
+              placeholder="password"
+              className="border border-gray-300 y-2 p-2"
+            />
+            <button type="submit">
+              <LogIn />
+            </button>
+          </div>
         </form>
       )}
     </div>
