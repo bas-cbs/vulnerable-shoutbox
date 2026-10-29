@@ -37,8 +37,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
       },
-      body: JSON.stringify({ user: userInfo.username, content: body }),
+      body: JSON.stringify({ content: body }),
     });
 
     setPosts(await getPosts());

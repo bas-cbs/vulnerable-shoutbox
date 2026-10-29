@@ -42,11 +42,6 @@ class Token(BaseModel):
     token_type: str
 
 
-class Post(BaseModel):
-    user: str
-    content: str
-
-
 class PostContent(BaseModel):
     content: str
 
@@ -99,13 +94,16 @@ async def posts():
 
 
 @app.post("/post/create")
-async def create_post(post: Post):
+async def create_post(
+    post: PostContent,
+    current_user: Annotated[User, Depends(get_current_user)],
+):
     if post:
         with sqlite3.connect("db.sqlite") as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(
-                f"INSERT INTO posts (user, content) VALUES ('{post.user}', '{post.content}');"
+                f"INSERT INTO posts (user, content) VALUES ('{current_user.username}', '{post.content}');"
             )
 
 

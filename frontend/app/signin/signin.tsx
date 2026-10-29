@@ -1,12 +1,6 @@
 import { useState } from "react";
 
-export function SignIn() {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [userInfo, setUserInfo] = useState({
-    username: localStorage.getItem("username"),
-    email: localStorage.getItem("email"),
-  });
-
+export function SignIn({token, setToken, userInfo, setUserInfo}) {
   async function getUserInfo({ token }) {
     const res = await fetch("http://localhost:8000/userinfo", {
       method: "GET",
