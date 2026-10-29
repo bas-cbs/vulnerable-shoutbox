@@ -17,9 +17,8 @@ export function SignIn({ createPost }) {
 
     const userinfo = await res.json();
 
-    setUserInfo({ username: userinfo.username, email: userinfo.email });
-    localStorage.setItem("username", userinfo.username);
-    localStorage.setItem("email", userinfo.email);
+    return userinfo
+
   }
 
   async function getToken({ user, password }) {
@@ -54,7 +53,11 @@ export function SignIn({ createPost }) {
       if (token) {
         setToken(token);
         localStorage.setItem("token", token);
-        getUserInfo({ token: token });
+        const userinfo = await getUserInfo({ token: token });
+
+        setUserInfo({ username: userinfo.username, email: userinfo.email });
+        localStorage.setItem("username", userinfo.username);
+        localStorage.setItem("email", userinfo.email);
       }
     }
   }
