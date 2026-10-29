@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function SignIn({token, setToken, userInfo, setUserInfo}) {
+export function SignIn({ token, setToken, userInfo, setUserInfo }) {
   async function getUserInfo({ token }) {
     const res = await fetch("http://localhost:8000/userinfo", {
       method: "GET",

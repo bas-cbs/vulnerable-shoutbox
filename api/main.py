@@ -110,20 +110,29 @@ async def create_post(
 
 
 @app.delete("/post/{id}")
-async def delete_post(id: int):
+async def delete_post(
+    id: int,
+    current_user: Annotated[User, Depends(get_current_user)],
+):
     if id:
         with sqlite3.connect("db.sqlite") as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
-            cursor.execute(f"DELETE FROM posts WHERE id={id};")
+            cursor.execute(
+                f"DELETE FROM posts WHERE id={id} AND user='{current_user.username}';"
+            )
 
 
 @app.patch("/post/{id}")
-async def edit_post(id: int, post: PostContent):
+async def edit_post(
+    id: int,
+    post: PostContent,
+    current_user: Annotated[User, Depends(get_current_user)],
+):
     if id and post:
         with sqlite3.connect("db.sqlite") as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(
-                f"UPDATE posts SET content = '{post.content}' WHERE id = {id};"
+                f"UPDATE posts SET content = '{post.content}' WHERE id = {id} AND user='{current_user.username}';"
             )
