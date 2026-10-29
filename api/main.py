@@ -13,6 +13,7 @@ from oauth import (
     create_access_token,
     fake_users_db,
     get_current_user,
+    get_current_user_optional,
 )
 
 app = FastAPI()
@@ -96,14 +97,15 @@ async def posts():
 @app.post("/post/create")
 async def create_post(
     post: PostContent,
-    current_user: Annotated[User, Depends(get_current_user)],
+    current_user: Annotated[User, Depends(get_current_user_optional)],
 ):
     if post:
+        user = current_user.username if current_user else "anonymous"
         with sqlite3.connect("db.sqlite") as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(
-                f"INSERT INTO posts (user, content) VALUES ('{current_user.username}', '{post.content}');"
+                f"INSERT INTO posts (user, content) VALUES ('{user}', '{post.content}');"
             )
 
 

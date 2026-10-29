@@ -41,7 +41,7 @@ class UserPassword(User):
 
 password_hash = PasswordHash.recommended()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
 
 
 def verify_password(plain_password, hashed_password):
@@ -91,3 +91,10 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         raise INVALID_CREDENTIALS
 
     return user
+
+
+async def get_current_user_optional(token: Annotated[str, Depends(oauth2_scheme)]):
+    try:
+        return await get_current_user(token)
+    except HTTPException:
+        return None
