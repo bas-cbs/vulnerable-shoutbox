@@ -1,8 +1,11 @@
 import { useState } from "react";
 
 export function SignIn({ createPost }) {
-  const [token, setToken] = useState(null);
-  const [userInfo, setUserInfo] = useState({});
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [userInfo, setUserInfo] = useState({
+    username: localStorage.getItem("username"),
+    email: localStorage.getItem("email"),
+  });
 
   async function getUserInfo({ token }) {
     const res = await fetch("http://localhost:8000/userinfo", {
@@ -15,6 +18,8 @@ export function SignIn({ createPost }) {
     const userinfo = await res.json();
 
     setUserInfo({ username: userinfo.username, email: userinfo.email });
+    localStorage.setItem("username", userinfo.username);
+    localStorage.setItem("email", userinfo.email);
   }
 
   async function getToken({ user, password }) {
