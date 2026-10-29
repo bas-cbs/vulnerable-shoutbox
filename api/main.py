@@ -105,7 +105,7 @@ async def create_post(
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(
-                f"INSERT INTO posts (user, content) VALUES ('{user}', '{post.content}');"
+                "INSERT INTO posts (user, content) VALUES (?, ?);", (user, post.content)
             )
 
 
@@ -119,7 +119,8 @@ async def delete_post(
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(
-                f"DELETE FROM posts WHERE id={id} AND user='{current_user.username}';"
+                "DELETE FROM posts WHERE id = ? AND user = ?;",
+                (id, current_user.username),
             )
 
 
@@ -134,5 +135,6 @@ async def edit_post(
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(
-                f"UPDATE posts SET content = '{post.content}' WHERE id = {id} AND user='{current_user.username}';"
+                "UPDATE posts SET content = ? WHERE id = ? AND user = ?;",
+                (post.content, id, current_user.username),
             )
