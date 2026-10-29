@@ -75,7 +75,7 @@ export function CreatePost({ createPost }) {
     const postContent = formData.get("post");
 
     if (postContent) {
-      createPost({ user: "anonymous", body: postContent });
+      createPost({ body: postContent });
     }
   }
 

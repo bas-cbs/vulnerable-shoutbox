@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function SignIn({ createPost }) {
+export function SignIn() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [userInfo, setUserInfo] = useState({
     username: localStorage.getItem("username"),

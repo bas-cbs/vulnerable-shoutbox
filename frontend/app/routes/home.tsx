@@ -32,13 +32,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     email: localStorage.getItem("email"),
   });
 
-  async function createPost({ user, body }) {
+  async function createPost({ body }) {
     await fetch("http://localhost:8000/post/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ user: user, content: body }),
+      body: JSON.stringify({ user: userInfo.username, content: body }),
     });
 
     setPosts(await getPosts());
