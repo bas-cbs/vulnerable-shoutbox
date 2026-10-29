@@ -17,8 +17,7 @@ export function SignIn({ createPost }) {
 
     const userinfo = await res.json();
 
-    return userinfo
-
+    return userinfo;
   }
 
   async function getToken({ user, password }) {

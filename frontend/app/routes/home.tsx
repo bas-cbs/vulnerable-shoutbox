@@ -26,6 +26,11 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   const [posts, setPosts] = useState(loaderData);
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [userInfo, setUserInfo] = useState({
+    username: localStorage.getItem("username"),
+    email: localStorage.getItem("email"),
+  });
 
   async function createPost({ user, body }) {
     await fetch("http://localhost:8000/post/create", {
@@ -66,7 +71,12 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <h1>Shoutbox</h1>
         </header>
         <div className="max-w-[800px] w-full space-y-6 px-4 rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4">
-          <SignIn />
+          <SignIn
+            token={token}
+            setToken={setToken}
+            userInfo={userInfo}
+            setUserInfo={setUserInfo}
+          />
           <div className="flex justify-center">
             <CreatePost createPost={createPost} />
           </div>
