@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LogIn, LogOut } from "lucide-react";
+import { Link } from "react-router";
 
 export function SignIn({ token, setToken, userInfo, setUserInfo }) {
   async function getUserInfo({ token }) {
@@ -69,7 +70,11 @@ export function SignIn({ token, setToken, userInfo, setUserInfo }) {
       {token ? (
         <div className="flex gap-2">
           <p>
-            Signed in as: <b>{userInfo.username}</b> - {userInfo.email}
+            Signed in as:{" "}
+            <Link to={`/profile/${userInfo.username}`}>
+              <b>{userInfo.username}</b>
+            </Link>{" "}
+            - {userInfo.email}
           </p>
           <button onClick={handleSignOut}>
             <LogOut />

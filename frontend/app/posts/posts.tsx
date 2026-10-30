@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Pencil, Trash, X, Check, Send } from "lucide-react";
+import { Link } from "react-router";
 
 export function Posts({ postData, deletePost, editPost, userInfo }) {
   const [editPostId, setEditPostId] = useState(null);
@@ -26,7 +27,10 @@ export function Posts({ postData, deletePost, editPost, userInfo }) {
               <form onSubmit={(e) => handleEdit({ id: id, e: e })}>
                 <div className="flex justify-between items-center">
                   <span>
-                    <b>{user}</b>:&nbsp;
+                    <Link to={`/profile/${user}`}>
+                      <b>{user}</b>
+                    </Link>
+                    {": "}
                     <input
                       type="text"
                       id="post"
@@ -47,7 +51,10 @@ export function Posts({ postData, deletePost, editPost, userInfo }) {
             ) : (
               <div className="flex justify-between items-center">
                 <span>
-                  <b>{user}</b>: {content}
+                  <Link to={`/profile/${user}`}>
+                    <b>{user}</b>
+                  </Link>
+                  : {content}
                 </span>
                 {userInfo.username == user && (
                   <span>
