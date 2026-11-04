@@ -1,6 +1,7 @@
 """All API Endpoints."""
 
 import sqlite3
+from contextlib import asynccontextmanager
 from datetime import timedelta
 from pathlib import Path
 from typing import Annotated
@@ -19,7 +20,23 @@ from src.oauth import (
     get_current_user_optional,
 )
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Create and fill DB tables."""
+    with Path.open("./src/tables.sql") as f:
+        sql_commands = f.read()
+
+    with sqlite3.connect(settings.sqlite_path) as conn:
+        conn.executescript(sql_commands)
+        conn.commit()
+
+    yield
+
+    Path.unlink(settings.sqlite_path)
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 app.add_middleware(
@@ -29,17 +46,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.on_event("startup")
-def on_startup() -> None:
-    """Create and fill DB tables."""
-    with Path.open("./src/tables.sql") as f:
-        sql_commands = f.read()
-
-    with sqlite3.connect(settings.sqlite_path) as conn:
-        conn.executescript(sql_commands)
-        conn.commit()
 
 
 @app.post("/token")
