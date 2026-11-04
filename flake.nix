@@ -13,14 +13,16 @@
         buildInputs = [
           pkgs.nodejs
           pkgs.python314Packages.fastapi
-          pkgs.python314Packages.fastapi.optional-dependencies.standard
-          pkgs.python314Packages.pyjwt
+          pkgs.python314Packages.httpx
           pkgs.python314Packages.pwdlib
-          pkgs.python314Packages.ruff
           pkgs.python314Packages.pydantic-settings
+          pkgs.python314Packages.pyjwt
+          pkgs.python314Packages.pytest
           pkgs.python314Packages.python-dotenv
+          pkgs.python314Packages.ruff
           pkgs.python314Packages.uv
-        ];
+        ]
+        ++ pkgs.python314Packages.fastapi.optional-dependencies.standard;
       };
     };
 }

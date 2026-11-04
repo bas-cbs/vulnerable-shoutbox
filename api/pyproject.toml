@@ -21,5 +21,7 @@ ignore = ["D203", "D212", "COM812"]
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.2.0",
     "ruff>=0.17.3",
 ]
