@@ -12,17 +12,17 @@ from api.exceptions import INVALID_CREDENTIALS
 from api.models import TokenData, UserPassword
 
 
-password_hash = PasswordHash.recommended()
+PASSWORD_HASH = PasswordHash.recommended()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
+OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
 
 
 def verify_password(plain_password, hashed_password):
-    return password_hash.verify(plain_password, hashed_password)
+    return PASSWORD_HASH.verify(plain_password, hashed_password)
 
 
 def get_password_hash(password):
-    return password_hash.hash(password)
+    return PASSWORD_HASH.hash(password)
 
 
 def get_user(username: str):
@@ -44,7 +44,7 @@ def authenticate_user(username: str, password: str):
 
     if not user:
         # To prevent timing attacks
-        verify_password(password, password_hash.hash("dummypassword"))
+        verify_password(password, PASSWORD_HASH.hash("dummypassword"))
         return False
     if not verify_password(password, user.hashed_password):
         return False
@@ -57,7 +57,7 @@ def create_access_token(data: dict, expires_delta: timedelta):
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(token: Annotated[str, Depends(OAUTH2_SCHEME)]):
     try:
         payload = jwt.decode(
             token, settings.secret_key, algorithms=[settings.algorithm]
@@ -76,7 +76,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     return user
 
 
-async def get_current_user_optional(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user_optional(token: Annotated[str, Depends(OAUTH2_SCHEME)]):
     try:
         return await get_current_user(token)
     except HTTPException:
