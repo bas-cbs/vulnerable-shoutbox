@@ -10,9 +10,9 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash
 
-from api.config import settings
-from api.exceptions import INVALID_CREDENTIALS
-from api.models import TokenData, UserPassword
+from src.config import settings
+from src.exceptions import INVALID_CREDENTIALS
+from src.models import TokenData, UserPassword
 
 PASSWORD_HASH = PasswordHash.recommended()
 

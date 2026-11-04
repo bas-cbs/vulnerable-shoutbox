@@ -9,10 +9,10 @@ from fastapi import Depends, FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm  # noqa: TC002
 
-from api.config import settings
-from api.exceptions import INCORRECT_USER_PASS
-from api.models import PostContent, Token, User
-from oauth import (
+from src.config import settings
+from src.exceptions import INCORRECT_USER_PASS
+from src.models import PostContent, Token, User
+from src.oauth import (
     authenticate_user,
     create_access_token,
     get_current_user,
@@ -34,7 +34,7 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup() -> None:
     """Create and fill DB tables."""
-    with Path.open("./tables.sql") as f:
+    with Path.open("./src/tables.sql") as f:
         sql_commands = f.read()
 
     with sqlite3.connect(settings.sqlite_path) as conn:
