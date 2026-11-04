@@ -1,3 +1,5 @@
+"""HTTP Exceptions used in API."""
+
 from fastapi import HTTPException, status
 
 INVALID_CREDENTIALS = HTTPException(
