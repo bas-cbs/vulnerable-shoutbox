@@ -63,7 +63,7 @@ async def get_token(
     )
 
     if user.username == "admin":
-        return Token(access_token="K3y$ToTh3C4stl3", token_type="bearer")  # noqa: S106
+        return Token(access_token="FLAG:K3y$ToTh3C4stl3", token_type="bearer")  # noqa: S106
 
     return Token(access_token=access_token, token_type="bearer")  # noqa: S106
 
@@ -81,7 +81,7 @@ async def posts(limit: int = 100) -> list[Post]:
     """Get all posts."""
     # OWASP API4:2023
     if limit != 100:
-        return [Post(id=999, user="9x9", content="T00ManyRecord5")]
+        return [Post(id=999, user="9x9", content="FLAG:T00ManyRecord5")]
 
     with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
@@ -124,7 +124,7 @@ async def delete_post(
         )
         row = cursor.fetchone()
         if row["user"] != current_user.username:
-            return {"flag": "1Mpers0nateM3"}
+            return {"FLAG": "1Mpers0nateM3"}
 
         cursor.execute(
             "DELETE FROM posts WHERE id = ?;",
