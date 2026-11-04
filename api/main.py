@@ -45,18 +45,14 @@ class PostContent(BaseModel):
     content: str
 
 
-def create_db_and_tables():
-    with open("./sql/create_tables.sql", "r") as f:
+@app.on_event("startup")
+def on_startup():
+    with open("./tables.sql", "r") as f:
         sql_commands = f.read()
 
     with sqlite3.connect("db.sqlite") as conn:
         conn.executescript(sql_commands)
         conn.commit()
-
-
-@app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
 
 
 @app.post("/token")
