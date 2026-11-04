@@ -1,3 +1,5 @@
+"""OAuth authentication functions."""
+
 import sqlite3
 from datetime import UTC, datetime, timedelta
 from typing import Annotated
@@ -17,15 +19,18 @@ PASSWORD_HASH = PasswordHash.recommended()
 OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
 
 
-def verify_password(plain_password, hashed_password):
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Check if plain pass matches hashed pass."""
     return PASSWORD_HASH.verify(plain_password, hashed_password)
 
 
-def get_password_hash(password):
+def get_password_hash(password: str) -> str:
+    """Hash a password."""
     return PASSWORD_HASH.hash(password)
 
 
-def get_user(username: str):
+def get_user(username: str) -> UserPassword | None:
+    """Get all information for a given username."""
     with sqlite3.connect(settings.sqlite_path) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
@@ -38,8 +43,11 @@ def get_user(username: str):
         if row:
             return UserPassword(**row)
 
+        return None
 
-def authenticate_user(username: str, password: str):
+
+def authenticate_user(username: str, password: str) -> UserPassword | bool:
+    """Check if username and password combination is correct."""
     user = get_user(username)
 
     if not user:
@@ -52,12 +60,16 @@ def authenticate_user(username: str, password: str):
     return user
 
 
-def create_access_token(data: dict, expires_delta: timedelta):
+def create_access_token(data: dict, expires_delta: timedelta) -> str:
+    """Create JWT access token."""
     to_encode = {**data.copy(), "exp": datetime.now(UTC) + expires_delta}
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
 
 
-async def get_current_user(token: Annotated[str, Depends(OAUTH2_SCHEME)]):
+async def get_current_user(
+    token: Annotated[str, Depends(OAUTH2_SCHEME)],
+) -> UserPassword:
+    """Get current user based on token."""
     try:
         payload = jwt.decode(
             token,
@@ -68,8 +80,8 @@ async def get_current_user(token: Annotated[str, Depends(OAUTH2_SCHEME)]):
         if username is None:
             raise INVALID_CREDENTIALS
         token_data = TokenData(username=username)
-    except InvalidTokenError:
-        raise INVALID_CREDENTIALS
+    except InvalidTokenError as exc:
+        raise INVALID_CREDENTIALS from exc
 
     user = get_user(username=token_data.username)
     if user is None:
@@ -78,7 +90,10 @@ async def get_current_user(token: Annotated[str, Depends(OAUTH2_SCHEME)]):
     return user
 
 
-async def get_current_user_optional(token: Annotated[str, Depends(OAUTH2_SCHEME)]):
+async def get_current_user_optional(
+    token: Annotated[str, Depends(OAUTH2_SCHEME)],
+) -> UserPassword | None:
+    """Get potentially nonexistent current user."""
     try:
         return await get_current_user(token)
     except HTTPException:
