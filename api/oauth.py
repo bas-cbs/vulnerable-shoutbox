@@ -7,10 +7,10 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash
+
 from api.config import settings
 from api.exceptions import INVALID_CREDENTIALS
 from api.models import TokenData, UserPassword
-
 
 PASSWORD_HASH = PasswordHash.recommended()
 
@@ -60,7 +60,7 @@ def create_access_token(data: dict, expires_delta: timedelta):
 async def get_current_user(token: Annotated[str, Depends(OAUTH2_SCHEME)]):
     try:
         payload = jwt.decode(
-            token, settings.secret_key, algorithms=[settings.algorithm]
+            token, settings.secret_key, algorithms=[settings.algorithm],
         )
         username = payload.get("sub")
         if username is None:

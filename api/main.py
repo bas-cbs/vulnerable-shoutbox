@@ -5,17 +5,16 @@ from typing import Annotated
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
+
 from api.config import settings
 from api.exceptions import INCORRECT_USER_PASS
 from api.models import PostContent, Token, User
-
 from oauth import (
     authenticate_user,
     create_access_token,
     get_current_user,
     get_current_user_optional,
 )
-
 
 app = FastAPI()
 
@@ -31,7 +30,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 def on_startup():
-    with open("./tables.sql", "r") as f:
+    with open("./tables.sql") as f:
         sql_commands = f.read()
 
     with sqlite3.connect(settings.sqlite_path) as conn:
@@ -83,7 +82,7 @@ async def create_post(
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO posts (user, content) VALUES (?, ?);", (user, post.content)
+                "INSERT INTO posts (user, content) VALUES (?, ?);", (user, post.content),
             )
 
 
