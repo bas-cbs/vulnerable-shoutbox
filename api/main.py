@@ -5,12 +5,11 @@ from typing import Annotated
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel
 from api.config import settings
 from api.exceptions import INCORRECT_USER_PASS
+from api.models import PostContent, Token, User
 
 from oauth import (
-    User,
     authenticate_user,
     create_access_token,
     fake_users_db,
@@ -29,15 +28,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class PostContent(BaseModel):
-    content: str
 
 
 @app.on_event("startup")

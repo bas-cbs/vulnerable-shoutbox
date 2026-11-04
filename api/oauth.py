@@ -2,13 +2,13 @@ from datetime import UTC, datetime, timedelta
 from typing import Annotated
 
 import jwt
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash
-from pydantic import BaseModel
 from api.config import settings
 from api.exceptions import INVALID_CREDENTIALS
+from api.models import TokenData, UserPassword
 
 
 fake_users_db = {
@@ -18,19 +18,6 @@ fake_users_db = {
         "hashed_password": "$argon2id$v=19$m=65536,t=3,p=4$wagCPXjifgvUFBzq4hqe3w$CYaIb8sB+wtD+Vu/P4uod1+Qof8h+1g7bbDlBID48Rc",
     }
 }
-
-
-class TokenData(BaseModel):
-    username: str | None = None
-
-
-class User(BaseModel):
-    username: str
-    email: str | None = None
-
-
-class UserPassword(User):
-    hashed_password: str
 
 
 password_hash = PasswordHash.recommended()
