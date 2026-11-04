@@ -31,7 +31,7 @@ def get_password_hash(password: str) -> str:
 
 def get_user(username: str) -> UserPassword | None:
     """Get all information for a given username."""
-    with sqlite3.connect(settings.sqlite_path) as conn:
+    with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute(

@@ -24,16 +24,16 @@ from src.oauth import (
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Create and fill DB tables."""
-    with Path.open("./src/tables.sql") as f:
+    with Path.open(settings.db_seed_script) as f:
         sql_commands = f.read()
 
-    with sqlite3.connect(settings.sqlite_path) as conn:
+    with sqlite3.connect(settings.sqlite_db) as conn:
         conn.executescript(sql_commands)
         conn.commit()
 
     yield
 
-    Path.unlink(settings.sqlite_path)
+    Path.unlink(settings.sqlite_db)
 
 
 app = FastAPI(lifespan=lifespan)
@@ -76,7 +76,7 @@ async def get_user_info(
 @app.get("/posts")
 async def posts() -> list[dict]:
     """Get all posts."""
-    with sqlite3.connect(settings.sqlite_path) as conn:
+    with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM posts")
@@ -91,7 +91,7 @@ async def create_post(
 ) -> None:
     """Create a new post."""
     user = current_user.username if current_user else "anonymous"
-    with sqlite3.connect(settings.sqlite_path) as conn:
+    with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute(
@@ -106,7 +106,7 @@ async def delete_post(
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> None:
     """Delete a post."""
-    with sqlite3.connect(settings.sqlite_path) as conn:
+    with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute(
@@ -122,7 +122,7 @@ async def edit_post(
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> None:
     """Edit a post."""
-    with sqlite3.connect(settings.sqlite_path) as conn:
+    with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute(
