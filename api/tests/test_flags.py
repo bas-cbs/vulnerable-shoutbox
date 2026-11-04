@@ -1,0 +1,18 @@
+from fastapi.testclient import TestClient
+
+from src.main import app
+from tests.test_main import delete_auth_post, get_token
+
+
+def test_owasp1():
+    with TestClient(app) as client:
+        token = get_token(client)
+        response = delete_auth_post(client, token=token, post_id=1)
+        assert response.json() == {"flag": "1Mpers0nateM3"}
+
+
+def test_owasp4():
+    with TestClient(app) as client:
+        response = client.get("/posts?limit=999")
+        assert response.status_code == 200
+        assert response.json() == [{"flag": "T00ManyRecord5"}]

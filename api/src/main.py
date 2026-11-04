@@ -74,12 +74,16 @@ async def get_user_info(
 
 
 @app.get("/posts")
-async def posts() -> list[dict]:
+async def posts(limit: int = 100) -> list[dict]:
     """Get all posts."""
+    # OWASP API4:2023
+    if limit != 100:
+        return [{"flag": "T00ManyRecord5"}]
+
     with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM posts")
+        cursor.execute("SELECT * FROM posts LIMIT ?", (limit,))
 
         return [dict(row) for row in cursor.fetchall()]
 
@@ -109,9 +113,19 @@ async def delete_post(
     with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
+
+        # OWASP API1:2023
         cursor.execute(
-            "DELETE FROM posts WHERE id = ? AND user = ?;",
-            (post_id, current_user.username),
+            "SELECT user FROM posts WHERE id = ?",
+            (post_id,),
+        )
+        row = cursor.fetchone()
+        if row["user"] != current_user.username:
+            return {"flag": "1Mpers0nateM3"}
+
+        cursor.execute(
+            "DELETE FROM posts WHERE id = ?;",
+            (post_id,),
         )
 
 

@@ -84,8 +84,11 @@ def delete_auth_post(client, token, post_id):
     )
     assert response.status_code == 200
 
-    current_posts = client.get("/posts")
-    assert current_posts.json() == SEEDED_POSTS
+    if post_id == 4:
+        current_posts = client.get("/posts")
+        assert current_posts.json() == SEEDED_POSTS
+
+    return response
 
 
 def test_create_edit_delete_auth_post():
