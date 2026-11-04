@@ -4,6 +4,16 @@ CREATE TABLE IF NOT EXISTS posts (
     content TEXT
 );
 
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY,
+    username TEXT,
+    email TEXT,
+    hashed_password TEXT
+);
+
+
+INSERT OR IGNORE INTO users (id, username, email, hashed_password) VALUES 
+(1, 'johndoe', 'johndoe@example.com', '$argon2id$v=19$m=65536,t=3,p=4$wagCPXjifgvUFBzq4hqe3w$CYaIb8sB+wtD+Vu/P4uod1+Qof8h+1g7bbDlBID48Rc');
 
 INSERT OR IGNORE INTO posts (id, user, content) VALUES 
 (1, 'janine', 'hello world'),

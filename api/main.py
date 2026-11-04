@@ -12,7 +12,6 @@ from api.models import PostContent, Token, User
 from oauth import (
     authenticate_user,
     create_access_token,
-    fake_users_db,
     get_current_user,
     get_current_user_optional,
 )
@@ -35,7 +34,7 @@ def on_startup():
     with open("./tables.sql", "r") as f:
         sql_commands = f.read()
 
-    with sqlite3.connect("db.sqlite") as conn:
+    with sqlite3.connect(settings.sqlite_path) as conn:
         conn.executescript(sql_commands)
         conn.commit()
 
@@ -44,7 +43,7 @@ def on_startup():
 async def get_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+    user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise INCORRECT_USER_PASS
 
@@ -65,7 +64,7 @@ async def get_user_info(
 
 @app.get("/posts")
 async def posts():
-    with sqlite3.connect("db.sqlite") as conn:
+    with sqlite3.connect(settings.sqlite_path) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM posts")
@@ -80,7 +79,7 @@ async def create_post(
 ):
     if post:
         user = current_user.username if current_user else "anonymous"
-        with sqlite3.connect("db.sqlite") as conn:
+        with sqlite3.connect(settings.sqlite_path) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(
@@ -94,7 +93,7 @@ async def delete_post(
     current_user: Annotated[User, Depends(get_current_user)],
 ):
     if id:
-        with sqlite3.connect("db.sqlite") as conn:
+        with sqlite3.connect(settings.sqlite_path) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(
@@ -110,7 +109,7 @@ async def edit_post(
     current_user: Annotated[User, Depends(get_current_user)],
 ):
     if id and post:
-        with sqlite3.connect("db.sqlite") as conn:
+        with sqlite3.connect(settings.sqlite_path) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(

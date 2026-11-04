@@ -1,3 +1,4 @@
+import sqlite3
 from datetime import UTC, datetime, timedelta
 from typing import Annotated
 
@@ -9,15 +10,6 @@ from pwdlib import PasswordHash
 from api.config import settings
 from api.exceptions import INVALID_CREDENTIALS
 from api.models import TokenData, UserPassword
-
-
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$argon2id$v=19$m=65536,t=3,p=4$wagCPXjifgvUFBzq4hqe3w$CYaIb8sB+wtD+Vu/P4uod1+Qof8h+1g7bbDlBID48Rc",
-    }
-}
 
 
 password_hash = PasswordHash.recommended()
@@ -33,14 +25,22 @@ def get_password_hash(password):
     return password_hash.hash(password)
 
 
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserPassword(**user_dict)
+def get_user(username: str):
+    with sqlite3.connect(settings.sqlite_path) as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT username, email, hashed_password FROM users WHERE username = ?",
+            (username,),
+        )
+        row = cursor.fetchone()
+
+        if row:
+            return UserPassword(**row)
 
 
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
+def authenticate_user(username: str, password: str):
+    user = get_user(username)
 
     if not user:
         # To prevent timing attacks
@@ -69,7 +69,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     except InvalidTokenError:
         raise INVALID_CREDENTIALS
 
-    user = get_user(fake_users_db, username=token_data.username)
+    user = get_user(username=token_data.username)
     if user is None:
         raise INVALID_CREDENTIALS
 
