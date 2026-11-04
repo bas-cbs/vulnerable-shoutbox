@@ -27,10 +27,10 @@ def test_create_anonymous_post():
         ]
 
 
-def get_token(client):
+def get_token(client, username="johndoe", password="secret"):
     response = client.post(
         "/token",
-        data={"username": "johndoe", "password": "secret"},
+        data={"username": username, "password": password},
         headers={"Content-Type": "application/x-www-form-urlencoded"},
     )
     assert response.status_code == 200

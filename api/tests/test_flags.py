@@ -11,6 +11,12 @@ def test_owasp1():
         assert response.json() == {"flag": "1Mpers0nateM3"}
 
 
+def test_owasp2():
+    with TestClient(app) as client:
+        token = get_token(client, username="admin", password="admin")
+        assert token == "K3y$ToTh3C4stl3"
+
+
 def test_owasp4():
     with TestClient(app) as client:
         response = client.get("/posts?limit=999")
