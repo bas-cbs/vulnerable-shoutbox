@@ -100,7 +100,7 @@ async def create_post(
         )
 
 
-@app.delete("/post/{id}")
+@app.delete("/post/{post_id}")
 async def delete_post(
     post_id: int,
     current_user: Annotated[User, Depends(get_current_user)],
@@ -115,7 +115,7 @@ async def delete_post(
         )
 
 
-@app.patch("/post/{id}")
+@app.patch("/post/{post_id}")
 async def edit_post(
     post_id: int,
     post: PostContent,
