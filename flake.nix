@@ -19,6 +19,7 @@
           pkgs.python314Packages.ruff
           pkgs.python314Packages.pydantic-settings
           pkgs.python314Packages.python-dotenv
+          pkgs.python314Packages.uv
         ];
       };
     };

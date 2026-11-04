@@ -8,10 +8,14 @@ dependencies = [
     "fastapi[standard-no-fastapi-cloud-cli]>=0.162.0",
     "pwdlib[argon2]>=0.3.1",
     "pyjwt>=2.15.1",
-    "ruff>=0.17.3",
 ]
 
 [tool.uv.workspace]
 members = [
     "test",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.3",
 ]
