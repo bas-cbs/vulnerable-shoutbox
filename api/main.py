@@ -2,11 +2,12 @@ import sqlite3
 from datetime import timedelta
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from api.config import settings
+from api.exceptions import INCORRECT_USER_PASS
 
 from oauth import (
     User,
@@ -19,12 +20,6 @@ from oauth import (
 
 
 app = FastAPI()
-
-INVALID_CREDENTIALS = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Incorrect username or password",
-    headers={"WWW-Authenticate": "Bearer"},
-)
 
 
 app.add_middleware(
@@ -61,7 +56,7 @@ async def get_token(
 ) -> Token:
     user = authenticate_user(fake_users_db, form_data.username, form_data.password)
     if not user:
-        raise INVALID_CREDENTIALS
+        raise INCORRECT_USER_PASS
 
     access_token = create_access_token(
         data={"sub": user.username},

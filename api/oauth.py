@@ -8,12 +8,8 @@ from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash
 from pydantic import BaseModel
 from api.config import settings
+from api.exceptions import INVALID_CREDENTIALS
 
-INVALID_CREDENTIALS = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Could not validate credentials",
-    headers={"WWW-Authenticate": "Bearer"},
-)
 
 fake_users_db = {
     "johndoe": {
