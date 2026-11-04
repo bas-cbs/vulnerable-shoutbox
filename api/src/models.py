@@ -33,3 +33,11 @@ class PostContent(BaseModel):
     """Post information."""
 
     content: str
+
+
+class Post(BaseModel):
+    """All post information."""
+
+    id: int
+    user: str
+    content: str

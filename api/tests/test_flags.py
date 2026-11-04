@@ -21,4 +21,6 @@ def test_owasp4():
     with TestClient(app) as client:
         response = client.get("/posts?limit=999")
         assert response.status_code == 200
-        assert response.json() == [{"flag": "T00ManyRecord5"}]
+        assert response.json() == [
+            {"id": 999, "user": "9x9", "content": "T00ManyRecord5"}
+        ]

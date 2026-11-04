@@ -12,7 +12,7 @@ from fastapi.security import OAuth2PasswordRequestForm  # noqa: TC002
 
 from src.config import settings
 from src.exceptions import INCORRECT_USER_PASS
-from src.models import PostContent, Token, User
+from src.models import Post, PostContent, Token, User
 from src.oauth import (
     authenticate_user,
     create_access_token,
@@ -61,7 +61,7 @@ async def get_token(
         data={"sub": user.username},
         expires_delta=timedelta(minutes=settings.access_token_expire_minutes),
     )
-    
+
     if user.username == "admin":
         return Token(access_token="K3y$ToTh3C4stl3", token_type="bearer")  # noqa: S106
 
@@ -77,18 +77,18 @@ async def get_user_info(
 
 
 @app.get("/posts")
-async def posts(limit: int = 100) -> list[dict]:
+async def posts(limit: int = 100) -> list[Post]:
     """Get all posts."""
     # OWASP API4:2023
     if limit != 100:
-        return [{"flag": "T00ManyRecord5"}]
+        return [Post(id=999, user="9x9", content="T00ManyRecord5")]
 
     with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM posts LIMIT ?", (limit,))
 
-        return [dict(row) for row in cursor.fetchall()]
+        return [Post(**row) for row in cursor.fetchall()]
 
 
 @app.post("/post/create", status_code=status.HTTP_201_CREATED)
