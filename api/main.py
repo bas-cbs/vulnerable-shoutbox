@@ -1,10 +1,13 @@
+"""All API Endpoints."""
+
 import sqlite3
 from datetime import timedelta
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm  # noqa: TC002
 
 from api.config import settings
 from api.exceptions import INCORRECT_USER_PASS
@@ -30,7 +33,8 @@ app.add_middleware(
 
 @app.on_event("startup")
 def on_startup() -> None:
-    with open("./tables.sql") as f:
+    """Create and fill DB tables."""
+    with Path.open("./tables.sql") as f:
         sql_commands = f.read()
 
     with sqlite3.connect(settings.sqlite_path) as conn:
@@ -42,6 +46,7 @@ def on_startup() -> None:
 async def get_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
+    """Get access token."""
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise INCORRECT_USER_PASS
@@ -51,18 +56,20 @@ async def get_token(
         expires_delta=timedelta(minutes=settings.access_token_expire_minutes),
     )
 
-    return Token(access_token=access_token, token_type="bearer")
+    return Token(access_token=access_token, token_type="bearer")  # noqa: S106
 
 
 @app.get("/userinfo")
 async def get_user_info(
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> User:
+    """Get user information."""
     return current_user
 
 
 @app.get("/posts")
 async def posts() -> list[dict]:
+    """Get all posts."""
     with sqlite3.connect(settings.sqlite_path) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
@@ -76,6 +83,7 @@ async def create_post(
     post: PostContent,
     current_user: Annotated[User, Depends(get_current_user_optional)],
 ) -> None:
+    """Create a new post."""
     user = current_user.username if current_user else "anonymous"
     with sqlite3.connect(settings.sqlite_path) as conn:
         conn.row_factory = sqlite3.Row
@@ -88,28 +96,30 @@ async def create_post(
 
 @app.delete("/post/{id}")
 async def delete_post(
-    id: int,
+    post_id: int,
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> None:
+    """Delete a post."""
     with sqlite3.connect(settings.sqlite_path) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute(
             "DELETE FROM posts WHERE id = ? AND user = ?;",
-            (id, current_user.username),
+            (post_id, current_user.username),
         )
 
 
 @app.patch("/post/{id}")
 async def edit_post(
-    id: int,
+    post_id: int,
     post: PostContent,
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> None:
+    """Edit a post."""
     with sqlite3.connect(settings.sqlite_path) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute(
             "UPDATE posts SET content = ? WHERE id = ? AND user = ?;",
-            (post.content, id, current_user.username),
+            (post.content, post_id, current_user.username),
         )
