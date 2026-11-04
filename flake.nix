@@ -17,6 +17,8 @@
           pkgs.python314Packages.pyjwt
           pkgs.python314Packages.pwdlib
           pkgs.python314Packages.ruff
+          pkgs.python314Packages.pydantic-settings
+          pkgs.python314Packages.python-dotenv
         ];
       };
     };

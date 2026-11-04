@@ -7,9 +7,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash
 from pydantic import BaseModel
-
-SECRET_KEY = "a4c249bac88fe82cc68b7f47b5d649164035048ba707dfc1ee43eabb014c824c"
-ALGORITHM = "HS256"
+from api.config import settings
 
 INVALID_CREDENTIALS = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
@@ -73,12 +71,14 @@ def authenticate_user(fake_db, username: str, password: str):
 
 def create_access_token(data: dict, expires_delta: timedelta):
     to_encode = {**data.copy(), "exp": datetime.now(UTC) + expires_delta}
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
 
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(
+            token, settings.secret_key, algorithms=[settings.algorithm]
+        )
         username = payload.get("sub")
         if username is None:
             raise INVALID_CREDENTIALS

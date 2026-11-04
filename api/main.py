@@ -6,6 +6,7 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
+from api.config import settings
 
 from oauth import (
     User,
@@ -16,8 +17,9 @@ from oauth import (
     get_current_user_optional,
 )
 
+
 app = FastAPI()
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
 INVALID_CREDENTIALS = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
     detail="Incorrect username or password",
@@ -25,13 +27,9 @@ INVALID_CREDENTIALS = HTTPException(
 )
 
 
-origins = [
-    "http://localhost:5173",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=settings.origin,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -71,7 +69,7 @@ async def get_token(
 
     access_token = create_access_token(
         data={"sub": user.username},
-        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+        expires_delta=timedelta(minutes=settings.access_token_expire_minutes),
     )
 
     return Token(access_token=access_token, token_type="bearer")
