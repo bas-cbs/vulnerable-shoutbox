@@ -4,7 +4,7 @@ import { useState } from "react";
 import { SignIn } from "../signin/signin";
 
 export async function getPosts() {
-  const res = await fetch("http://localhost:8000/posts");
+  const res = await fetch("http://localhost:8000/v2/posts");
   const posts = await res.json();
   return posts;
 }
@@ -33,7 +33,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   });
 
   async function createPost({ body }) {
-    await fetch("http://localhost:8000/post/create", {
+    await fetch("http://localhost:8000/v2/post/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   }
 
   async function deletePost({ id }) {
-    await fetch(`http://localhost:8000/post/${id}`, {
+    await fetch(`http://localhost:8000/v2/post/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   }
 
   async function editPost({ id, content }) {
-    await fetch(`http://localhost:8000/post/${id}`, {
+    await fetch(`http://localhost:8000/v2/post/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

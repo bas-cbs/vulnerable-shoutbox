@@ -20,15 +20,15 @@ export function Posts({ postData, deletePost, editPost, userInfo }) {
 
   return (
     <ul className="space-y-3">
-      {postData.map(({ id, user, content }) => (
+      {postData.map(({ id, username, content }) => (
         <li key={id}>
           <div className="rounded border border-gray-200 space-y-4 p-4">
             {editPostId === id ? (
               <form onSubmit={(e) => handleEdit({ id: id, e: e })}>
                 <div className="flex justify-between items-center">
                   <span>
-                    <Link to={`/profile/${user}`}>
-                      <b>{user}</b>
+                    <Link to={`/profile/${username}`}>
+                      <b>{username}</b>
                     </Link>
                     {": "}
                     <input
@@ -51,12 +51,12 @@ export function Posts({ postData, deletePost, editPost, userInfo }) {
             ) : (
               <div className="flex justify-between items-center">
                 <span>
-                  <Link to={`/profile/${user}`}>
-                    <b>{user}</b>
+                  <Link to={`/profile/${username}`}>
+                    <b>{username}</b>
                   </Link>
                   : {content}
                 </span>
-                {userInfo.username == user && (
+                {userInfo.username == username && (
                   <span>
                     <button onClick={() => setEditPostId(id)}>
                       <Pencil />

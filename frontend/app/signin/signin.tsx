@@ -4,7 +4,7 @@ import { Link } from "react-router";
 
 export function SignIn({ token, setToken, userInfo, setUserInfo }) {
   async function getUserInfo({ token }) {
-    const res = await fetch("http://localhost:8000/userinfo", {
+    const res = await fetch("http://localhost:8000/v2/userinfo", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -21,7 +21,7 @@ export function SignIn({ token, setToken, userInfo, setUserInfo }) {
     params.append("username", user);
     params.append("password", password);
 
-    const res = await fetch(`http://localhost:8000/token`, {
+    const res = await fetch(`http://localhost:8000/v2/token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
