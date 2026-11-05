@@ -29,7 +29,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [userInfo, setUserInfo] = useState({
     username: localStorage.getItem("username"),
-    email: localStorage.getItem("email"),
   });
 
   async function createPost({ body }) {

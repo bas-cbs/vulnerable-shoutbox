@@ -50,9 +50,8 @@ export function SignIn({ token, setToken, userInfo, setUserInfo }) {
         localStorage.setItem("token", token);
         const userinfo = await getUserInfo({ token: token });
 
-        setUserInfo({ username: userinfo.username, email: userinfo.email });
+        setUserInfo({ username: userinfo.username });
         localStorage.setItem("username", userinfo.username);
-        localStorage.setItem("email", userinfo.email);
       }
     }
   }
@@ -60,7 +59,6 @@ export function SignIn({ token, setToken, userInfo, setUserInfo }) {
   function handleSignOut() {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
-    localStorage.removeItem("email");
     setToken(null);
     setUserInfo({});
   }
@@ -74,7 +72,6 @@ export function SignIn({ token, setToken, userInfo, setUserInfo }) {
             <Link to={`/profile/${userInfo.username}`}>
               <b>{userInfo.username}</b>
             </Link>{" "}
-            - {userInfo.email}
           </p>
           <button onClick={handleSignOut}>
             <LogOut />
