@@ -39,3 +39,16 @@ def test_owasp6(client):
 
     response = register_raffle(client, token=token, check_status=False)
     assert response.json() == "FLAG:4Bsolut3W!nne3R!"
+
+
+def test_owasp9(client):
+    response = client.post(
+        "/v1/token",
+        data={"username": "whatever", "password": "whatever"},
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+    )
+    assert response.status_code == 200
+    assert response.json() == {
+        "access_token": "FLAG:T3chD3bt:(",
+        "token_type": "bearer",
+    }

@@ -54,6 +54,14 @@ app.mount("/v1", app_v1)
 app.mount("/v2", app_v2)
 
 
+@app_v1.post("/token")
+async def get_token(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+) -> Token:
+    """Get access token."""
+    return Token(access_token="FLAG:T3chD3bt:(", token_type="bearer")  # noqa: S106
+
+
 @app_v2.post("/token")
 async def get_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
