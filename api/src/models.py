@@ -40,3 +40,10 @@ class Post(BaseModel):
     id: int
     username: str
     content: str
+
+
+class RaffleRegistration(BaseModel):
+    """All raffle registration information."""
+
+    id: int
+    username: str

@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 
 from src.main import app
-from tests.test_main import delete_auth_post, get_token
+from tests.test_main import delete_auth_post, get_token, register_raffle
 
 
 def test_owasp1():
@@ -37,3 +37,13 @@ def test_owasp4():
         assert response.json() == [
             {"id": 999, "username": "9x9", "content": "FLAG:T00ManyRecord5"}
         ]
+
+
+def test_owasp6():
+    with TestClient(app) as client:
+        token = get_token(client)
+        for _ in range(1, 11):
+            register_raffle(client, token=token)
+
+        response = register_raffle(client, token=token, check_status=False)
+        assert response.json() == "FLAG:4Bsolut3W!nne3R!"

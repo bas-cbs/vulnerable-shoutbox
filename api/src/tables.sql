@@ -20,6 +20,22 @@ CREATE TABLE IF NOT EXISTS posts (
     CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+CREATE TABLE IF NOT EXISTS rafflereg (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+
+CREATE TRIGGER IF NOT EXISTS raffle_max_rows
+BEFORE INSERT ON rafflereg
+BEGIN
+    SELECT CASE
+        WHEN (SELECT COUNT(*) FROM rafflereg) >= 10
+        THEN RAISE(ABORT, 'Maximum 10 rows allowed in this table')
+    END;
+END;
+
 
 CREATE VIEW IF NOT EXISTS users_posts AS
 SELECT posts.id, users.username, posts.content
@@ -30,6 +46,11 @@ CREATE VIEW IF NOT EXISTS users_profiles AS
 SELECT profiles.id, users.username, profiles.email, profiles.description, profiles.bsn
 FROM profiles
 LEFT JOIN users ON profiles.user_id = users.id;
+
+CREATE VIEW IF NOT EXISTS users_raffle AS
+SELECT rafflereg.id, users.username
+FROM rafflereg
+LEFT JOIN users ON rafflereg.user_id = users.id;
 
 
 INSERT OR IGNORE INTO users (id, username, hashed_password) VALUES 

@@ -94,3 +94,31 @@ def test_create_edit_delete_auth_post():
         create_auth_post(client, token=token)
         edit_auth_post(client, token=token, post_id=4)
         delete_auth_post(client, token=token, post_id=4)
+
+
+def test_get_all_raffle_registrations():
+    with TestClient(app) as client:
+        response = client.get("/raffle")
+        assert response.status_code == 200
+        assert response.json() == []
+
+
+def register_raffle(client, token, check_status=True):
+    response = client.post(
+        "/raffle/register",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    if check_status:
+        assert response.status_code == 201
+
+    return response
+
+
+def test_register_raffle():
+    with TestClient(app) as client:
+        token = get_token(client)
+        register_raffle(client, token=token)
+
+        registrations = client.get("/raffle")
+        assert registrations.json() == [{"id": 1, "username": "johndoe"}]

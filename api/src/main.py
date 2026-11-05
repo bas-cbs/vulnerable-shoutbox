@@ -12,7 +12,7 @@ from fastapi.security import OAuth2PasswordRequestForm  # noqa: TC002
 
 from src.config import settings
 from src.exceptions import INCORRECT_USER_PASS
-from src.models import Post, PostContent, Token, User
+from src.models import Post, PostContent, RaffleRegistration, Token, User
 from src.oauth import (
     authenticate_user,
     create_access_token,
@@ -169,3 +169,37 @@ async def profile(username: str) -> dict:
         cursor.execute("SELECT * FROM users_profiles WHERE username = ?", (username,))
 
         return dict(cursor.fetchone())
+
+
+@app.get("/raffle")
+async def raffle_registrations() -> list[RaffleRegistration]:
+    """Get raffle registrations."""
+    with sqlite3.connect(settings.sqlite_db) as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users_raffle;")
+        return [RaffleRegistration(**row) for row in cursor.fetchall()]
+
+
+@app.post("/raffle/register", status_code=status.HTTP_201_CREATED)
+async def register_for_raffle(
+    current_user: Annotated[User, Depends(get_current_user_optional)],
+):
+    """Register for raffle."""
+    with sqlite3.connect(settings.sqlite_db) as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        user_id = get_user_id(cursor, current_user.username)
+
+        # OWASP API6:2023
+        cursor.execute(
+            "SELECT COUNT(*) AS count FROM rafflereg WHERE user_id = ?;",
+            (user_id,),
+        )
+        row = cursor.fetchone()
+        if row["count"] >= 10:
+            return "FLAG:4Bsolut3W!nne3R!"
+        cursor.execute(
+            "INSERT INTO rafflereg (user_id) VALUES (?);",
+            (user_id,),
+        )
