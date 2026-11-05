@@ -47,8 +47,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app_v1 = FastAPI()
+app_v2 = FastAPI()
 
-@app.post("/token")
+app.mount("/v1", app_v1)
+app.mount("/v2", app_v2)
+
+
+@app_v2.post("/token")
 async def get_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
@@ -68,7 +74,7 @@ async def get_token(
     return Token(access_token=access_token, token_type="bearer")  # noqa: S106
 
 
-@app.get("/userinfo")
+@app_v2.get("/userinfo")
 async def get_user_info(
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> User:
@@ -76,7 +82,7 @@ async def get_user_info(
     return current_user
 
 
-@app.get("/posts")
+@app_v2.get("/posts")
 async def posts(limit: int = 100) -> list[Post]:
     """Get all posts."""
     # OWASP API4:2023
@@ -101,7 +107,7 @@ def get_user_id(cursor, username):
     return row["id"]
 
 
-@app.post("/post/create", status_code=status.HTTP_201_CREATED)
+@app_v2.post("/post/create", status_code=status.HTTP_201_CREATED)
 async def create_post(
     post: PostContent,
     current_user: Annotated[User, Depends(get_current_user_optional)],
@@ -118,7 +124,7 @@ async def create_post(
         )
 
 
-@app.delete("/post/{post_id}")
+@app_v2.delete("/post/{post_id}")
 async def delete_post(
     post_id: int,
     current_user: Annotated[User, Depends(get_current_user)],
@@ -143,7 +149,7 @@ async def delete_post(
         )
 
 
-@app.patch("/post/{post_id}")
+@app_v2.patch("/post/{post_id}")
 async def edit_post(
     post_id: int,
     post: PostContent,
@@ -160,7 +166,7 @@ async def edit_post(
         )
 
 
-@app.get("/profile/{username}")
+@app_v2.get("/profile/{username}")
 async def profile(username: str) -> dict:
     """Get user profile."""
     with sqlite3.connect(settings.sqlite_db) as conn:
@@ -171,7 +177,7 @@ async def profile(username: str) -> dict:
         return dict(cursor.fetchone())
 
 
-@app.get("/raffle")
+@app_v2.get("/raffle")
 async def raffle_registrations() -> list[RaffleRegistration]:
     """Get raffle registrations."""
     with sqlite3.connect(settings.sqlite_db) as conn:
@@ -181,7 +187,7 @@ async def raffle_registrations() -> list[RaffleRegistration]:
         return [RaffleRegistration(**row) for row in cursor.fetchall()]
 
 
-@app.post("/raffle/register", status_code=status.HTTP_201_CREATED)
+@app_v2.post("/raffle/register", status_code=status.HTTP_201_CREATED)
 async def register_for_raffle(
     current_user: Annotated[User, Depends(get_current_user_optional)],
 ):
