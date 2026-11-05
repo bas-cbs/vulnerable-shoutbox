@@ -112,3 +112,26 @@ def test_register_raffle(client):
 
     registrations = client.get("/v2/raffle")
     assert registrations.json() == [{"id": 1, "username": "johndoe"}]
+
+
+def upload_photo(client, token, url):
+    response = client.post(
+        "/v2/upload_photo",
+        json={"url": url},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert response.status_code == 201
+
+    return response
+
+
+def test_upload_photo(client):
+    token = get_token(client)
+    response = upload_photo(client, token=token, url="www.google.com")
+
+    assert response.json() == {
+        "status_code:": 200,
+        "url": "www.google.com",
+        "http_version": "HTTP/1.1",
+    }

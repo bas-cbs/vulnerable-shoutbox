@@ -41,6 +41,19 @@ def test_owasp6(client):
     assert response.json() == "FLAG:4Bsolut3W!nne3R!"
 
 
+def test_owasp7(client):
+    response = client.post(
+        "/v2/upload_photo",
+        json={"url": "localhost"},
+    )
+    assert response.status_code == 201
+    assert response.json() == {
+        "status_code:": 200,
+        "url": "FLAG:Netw0rk3xpl0r3r",
+        "http_version": "HTTP/1.1",
+    }
+
+
 def test_owasp9(client):
     response = client.post(
         "/v1/token",

@@ -12,7 +12,7 @@ from fastapi.security import OAuth2PasswordRequestForm  # noqa: TC002
 
 from src.config import settings
 from src.exceptions import INCORRECT_USER_PASS
-from src.models import Post, PostContent, RaffleRegistration, Token, User
+from src.models import PhotoUrl, Post, PostContent, RaffleRegistration, Token, User
 from src.oauth import (
     authenticate_user,
     create_access_token,
@@ -217,3 +217,24 @@ async def register_for_raffle(
             "INSERT INTO rafflereg (user_id) VALUES (?);",
             (user_id,),
         )
+
+
+@app_v2.post("/upload_photo", status_code=status.HTTP_201_CREATED)
+async def upload_photo(
+    current_user: Annotated[User, Depends(get_current_user_optional)],
+    photo_url: PhotoUrl,
+) -> dict:
+    """Upload a profile photo."""
+    # OWASP API7:2023
+    if any(x in photo_url.url for x in ["localhost", "127.0.0.1"]):
+        return {
+            "status_code:": status.HTTP_200_OK,
+            "url": "FLAG:Netw0rk3xpl0r3r",
+            "http_version": "HTTP/1.1",
+        }
+
+    return {
+        "status_code:": status.HTTP_200_OK,
+        "url": photo_url.url,
+        "http_version": "HTTP/1.1",
+    }

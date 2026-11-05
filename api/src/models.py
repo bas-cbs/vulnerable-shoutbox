@@ -47,3 +47,9 @@ class RaffleRegistration(BaseModel):
 
     id: int
     username: str
+
+
+class PhotoUrl(BaseModel):
+    """Photo upload url."""
+
+    url: str
