@@ -13,7 +13,6 @@ class User(BaseModel):
     """User information."""
 
     username: str
-    email: str | None = None
 
 
 class UserPassword(User):
@@ -39,5 +38,5 @@ class Post(BaseModel):
     """All post information."""
 
     id: int
-    user: str
+    username: str
     content: str

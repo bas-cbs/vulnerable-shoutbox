@@ -81,14 +81,24 @@ async def posts(limit: int = 100) -> list[Post]:
     """Get all posts."""
     # OWASP API4:2023
     if limit != 100:
-        return [Post(id=999, user="9x9", content="FLAG:T00ManyRecord5")]
+        return [Post(id=999, username="9x9", content="FLAG:T00ManyRecord5")]
 
     with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM posts LIMIT ?", (limit,))
+        cursor.execute("SELECT * FROM users_posts LIMIT ?", (limit,))
 
         return [Post(**row) for row in cursor.fetchall()]
+
+
+def get_user_id(cursor, username):
+    """Get user id for a given username."""
+    cursor.execute(
+        "SELECT id FROM users WHERE username = ?;",
+        (username,),
+    )
+    row = cursor.fetchone()
+    return row["id"]
 
 
 @app.post("/post/create", status_code=status.HTTP_201_CREATED)
@@ -101,9 +111,10 @@ async def create_post(
     with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
+        user_id = get_user_id(cursor, user)
         cursor.execute(
-            "INSERT INTO posts (user, content) VALUES (?, ?);",
-            (user, post.content),
+            "INSERT INTO posts (user_id, content) VALUES (?, ?);",
+            (user_id, post.content),
         )
 
 
@@ -119,11 +130,11 @@ async def delete_post(
 
         # OWASP API1:2023
         cursor.execute(
-            "SELECT user FROM posts WHERE id = ?",
+            "SELECT username FROM users_posts WHERE id = ?",
             (post_id,),
         )
         row = cursor.fetchone()
-        if row["user"] != current_user.username:
+        if row["username"] != current_user.username:
             return {"FLAG": "1Mpers0nateM3"}
 
         cursor.execute(
@@ -142,9 +153,10 @@ async def edit_post(
     with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
+        user_id = get_user_id(cursor, current_user.username)
         cursor.execute(
-            "UPDATE posts SET content = ? WHERE id = ? AND user = ?;",
-            (post.content, post_id, current_user.username),
+            "UPDATE posts SET content = ? WHERE id = ? AND user_id = ?;",
+            (post.content, post_id, user_id),
         )
 
 
@@ -154,6 +166,6 @@ async def profile(username: str) -> dict:
     with sqlite3.connect(settings.sqlite_db) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM profiles WHERE username = ?", (username,))
+        cursor.execute("SELECT * FROM users_profiles WHERE username = ?", (username,))
 
         return dict(cursor.fetchone())

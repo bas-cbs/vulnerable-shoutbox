@@ -35,7 +35,7 @@ def get_user(username: str) -> UserPassword | None:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT username, email, hashed_password FROM users WHERE username = ?",
+            "SELECT username, hashed_password FROM users WHERE username = ?",
             (username,),
         )
         row = cursor.fetchone()

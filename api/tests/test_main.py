@@ -3,9 +3,9 @@ from fastapi.testclient import TestClient
 from src.main import app
 
 SEEDED_POSTS = [
-    {"id": 1, "user": "janine", "content": "hello world"},
-    {"id": 2, "user": "bertrand", "content": "cool post"},
-    {"id": 3, "user": "jan", "content": "very nice"},
+    {"id": 1, "username": "janine", "content": "hello world"},
+    {"id": 2, "username": "bertrand", "content": "cool post"},
+    {"id": 3, "username": "jan", "content": "very nice"},
 ]
 
 
@@ -23,7 +23,7 @@ def test_create_anonymous_post():
 
         current_posts = client.get("/posts")
         assert current_posts.json() == SEEDED_POSTS + [
-            {"id": 4, "user": "anonymous", "content": "hallo"},
+            {"id": 4, "username": "anonymous", "content": "hallo"},
         ]
 
 
@@ -43,10 +43,7 @@ def test_get_info():
         token = get_token(client)
         response = client.get("/userinfo", headers={"Authorization": f"Bearer {token}"})
         assert response.status_code == 200
-        assert response.json() == {
-            "username": "johndoe",
-            "email": "johndoe@example.com",
-        }
+        assert response.json() == {"username": "johndoe"}
 
 
 def create_auth_post(client, token):
@@ -59,7 +56,7 @@ def create_auth_post(client, token):
 
     current_posts = client.get("/posts")
     assert current_posts.json() == SEEDED_POSTS + [
-        {"id": 4, "user": "johndoe", "content": "hallo"},
+        {"id": 4, "username": "johndoe", "content": "hallo"},
     ]
 
 
@@ -73,7 +70,7 @@ def edit_auth_post(client, token, post_id):
 
     current_posts = client.get("/posts")
     assert current_posts.json() == SEEDED_POSTS + [
-        {"id": post_id, "user": "johndoe", "content": "hallo edit"},
+        {"id": post_id, "username": "johndoe", "content": "hallo edit"},
     ]
 
 

@@ -22,7 +22,7 @@ def test_owasp3():
         response = client.get("/profile/jan")
         assert response.status_code == 200
         assert response.json() == {
-            "id": 2,
+            "id": 3,
             "username": "jan",
             "email": "jan@example.com",
             "description": "Not sure what to write here...",
@@ -35,5 +35,5 @@ def test_owasp4():
         response = client.get("/posts?limit=999")
         assert response.status_code == 200
         assert response.json() == [
-            {"id": 999, "user": "9x9", "content": "FLAG:T00ManyRecord5"}
+            {"id": 999, "username": "9x9", "content": "FLAG:T00ManyRecord5"}
         ]
