@@ -17,6 +17,19 @@ def test_owasp2():
         assert token == "FLAG:K3y$ToTh3C4stl3"
 
 
+def test_owasp3():
+    with TestClient(app) as client:
+        response = client.get("/profile/jan")
+        assert response.status_code == 200
+        assert response.json() == {
+            "id": 2,
+            "username": "jan",
+            "email": "jan@example.com",
+            "description": "Not sure what to write here...",
+            "bsn": "FLAG:S3ns!tiveInf0",
+        }
+
+
 def test_owasp4():
     with TestClient(app) as client:
         response = client.get("/posts?limit=999")

@@ -146,3 +146,14 @@ async def edit_post(
             "UPDATE posts SET content = ? WHERE id = ? AND user = ?;",
             (post.content, post_id, current_user.username),
         )
+
+
+@app.get("/profile/{username}")
+async def profile(username: str) -> dict:
+    """Get user profile."""
+    with sqlite3.connect(settings.sqlite_db) as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM profiles WHERE username = ?", (username,))
+
+        return dict(cursor.fetchone())
