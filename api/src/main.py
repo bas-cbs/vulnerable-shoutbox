@@ -101,8 +101,21 @@ async def posts(limit: int = 100) -> list[Post]:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM users_posts LIMIT ?", (limit,))
-
         return [Post(**row) for row in cursor.fetchall()]
+
+
+@app_v2.get("/posts/{post_id}")
+async def post(post_id: int) -> Post:
+    """Get post."""
+    with sqlite3.connect(settings.sqlite_db) as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT * FROM users_posts WHERE id = ?",
+            (post_id,),
+        )
+        row = cursor.fetchone()
+        return Post(**row)
 
 
 def get_user_id(cursor, username):
@@ -115,7 +128,7 @@ def get_user_id(cursor, username):
     return row["id"]
 
 
-@app_v2.post("/post/create", status_code=status.HTTP_201_CREATED)
+@app_v2.post("/posts", status_code=status.HTTP_201_CREATED)
 async def create_post(
     post: PostContent,
     current_user: Annotated[User, Depends(get_current_user_optional)],
@@ -132,7 +145,7 @@ async def create_post(
         )
 
 
-@app_v2.delete("/post/{post_id}")
+@app_v2.delete("/posts/{post_id}")
 async def delete_post(
     post_id: int,
     current_user: Annotated[User, Depends(get_current_user)],
@@ -157,7 +170,7 @@ async def delete_post(
         )
 
 
-@app_v2.patch("/post/{post_id}")
+@app_v2.patch("/posts/{post_id}")
 async def edit_post(
     post_id: int,
     post: PostContent,
@@ -174,7 +187,7 @@ async def edit_post(
         )
 
 
-@app_v2.get("/profile/{username}")
+@app_v2.get("/profiles/{username}")
 async def profile(username: str) -> dict:
     """Get user profile."""
     with sqlite3.connect(settings.sqlite_db) as conn:
@@ -195,7 +208,7 @@ async def raffle_registrations() -> list[RaffleRegistration]:
         return [RaffleRegistration(**row) for row in cursor.fetchall()]
 
 
-@app_v2.post("/raffle/register", status_code=status.HTTP_201_CREATED)
+@app_v2.post("/raffle", status_code=status.HTTP_201_CREATED)
 async def register_for_raffle(
     current_user: Annotated[User, Depends(get_current_user_optional)],
 ):

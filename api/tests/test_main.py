@@ -12,7 +12,7 @@ def test_get_all_posts(client):
 
 
 def test_create_anonymous_post(client):
-    response = client.post("/v2/post/create", json={"content": "hallo"})
+    response = client.post("/v2/posts", json={"content": "hallo"})
     assert response.status_code == 201
 
     current_posts = client.get("/v2/posts")
@@ -41,7 +41,7 @@ def test_get_info(client):
 
 def create_auth_post(client, token):
     response = client.post(
-        "/v2/post/create",
+        "/v2/posts",
         json={"content": "hallo"},
         headers={"Authorization": f"Bearer {token}"},
     )
@@ -55,7 +55,7 @@ def create_auth_post(client, token):
 
 def edit_auth_post(client, token, post_id):
     response = client.patch(
-        f"/v2/post/{post_id}",
+        f"/v2/posts/{post_id}",
         json={"content": "hallo edit"},
         headers={"Authorization": f"Bearer {token}"},
     )
@@ -69,7 +69,7 @@ def edit_auth_post(client, token, post_id):
 
 def delete_auth_post(client, token, post_id):
     response = client.delete(
-        f"/v2/post/{post_id}",
+        f"/v2/posts/{post_id}",
         headers={"Authorization": f"Bearer {token}"},
     )
     assert response.status_code == 200
@@ -96,7 +96,7 @@ def test_get_all_raffle_registrations(client):
 
 def register_raffle(client, token, check_status=True):
     response = client.post(
-        "/v2/raffle/register",
+        "/v2/raffle",
         headers={"Authorization": f"Bearer {token}"},
     )
 

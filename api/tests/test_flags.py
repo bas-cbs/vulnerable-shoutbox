@@ -13,7 +13,7 @@ def test_owasp2(client):
 
 
 def test_owasp3(client):
-    response = client.get("/v2/profile/jan")
+    response = client.get("/v2/profiles/jan")
     assert response.status_code == 200
     assert response.json() == {
         "id": 3,
