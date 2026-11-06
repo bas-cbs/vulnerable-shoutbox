@@ -44,6 +44,7 @@ export default function Profile({ loaderData, params }: Route.ComponentProps) {
                 <b>{profile.username}</b> ({profile.email})
               </p>
               <p>{profile.description}</p>
+              <p className="text-xs text-gray-500 leading-relaxed">Description sourced from localhost:8001</p>
             </div>
           ) : (
             <div>

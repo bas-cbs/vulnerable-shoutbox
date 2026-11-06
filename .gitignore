@@ -2,5 +2,5 @@ __pycache__
 .DS_Store
 .direnv
 .envrc
-api/db.sqlite
+*.sqlite
 .env

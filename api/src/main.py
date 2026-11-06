@@ -1,6 +1,7 @@
 """All API Endpoints."""
 
 import sqlite3
+import httpx
 from contextlib import asynccontextmanager
 from datetime import timedelta
 from pathlib import Path
@@ -194,8 +195,13 @@ async def profile(username: str) -> dict:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM users_profiles WHERE username = ?", (username,))
+        row = dict(cursor.fetchone())
 
-        return dict(cursor.fetchone())
+        ext_profile = httpx.get(f"http://localhost:8001/profiles/{username}")
+        ext_json = ext_profile.json()
+        row["description"] = ext_json["description"]
+
+        return row
 
 
 @app_v2.get("/raffle")

@@ -1,0 +1,27 @@
+[project]
+name = "owasp-shoutbox"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi[standard-no-fastapi-cloud-cli]>=0.162.0",
+    "pwdlib[argon2]>=0.3.1",
+    "pyjwt>=2.15.1",
+]
+
+[tool.uv.workspace]
+members = [
+    "test",
+]
+
+[tool.ruff.lint]
+select = [ "ALL" ]
+ignore = ["D203", "D212", "COM812"]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.2.0",
+    "ruff>=0.17.3",
+]
