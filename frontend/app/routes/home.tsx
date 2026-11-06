@@ -32,7 +32,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   });
 
   async function createPost({ body }) {
-    await fetch("http://localhost:8000/v2/post/create", {
+    await fetch("http://localhost:8000/v2/posts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   }
 
   async function deletePost({ id }) {
-    await fetch(`http://localhost:8000/v2/post/${id}`, {
+    await fetch(`http://localhost:8000/v2/posts/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   }
 
   async function editPost({ id, content }) {
-    await fetch(`http://localhost:8000/v2/post/${id}`, {
+    await fetch(`http://localhost:8000/v2/posts/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

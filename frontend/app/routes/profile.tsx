@@ -10,7 +10,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function getProfile({ username }) {
-  const res = await fetch(`http://localhost:8000/v2/profile/${username}`, {
+  const res = await fetch(`http://localhost:8000/v2/profiles/${username}`, {
     method: "GET",
   });
   if (res.ok) {

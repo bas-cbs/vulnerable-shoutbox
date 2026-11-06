@@ -33,7 +33,7 @@ export default function Raffle({ loaderData }: Route.ComponentProps) {
   const emptyRows = Array.from({ length: 10 - raffleReg.length });
 
   async function registerRaffle() {
-    await fetch("http://localhost:8000/v2/raffle/register", {
+    await fetch("http://localhost:8000/v2/raffle", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
