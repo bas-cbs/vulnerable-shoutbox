@@ -1,7 +1,9 @@
 import type { Route } from "./+types/home";
+import { Link } from "react-router";
 import { Posts, CreatePost } from "../posts/posts";
 import { useState } from "react";
 import { SignIn } from "../signin/signin";
+import { Ticket } from "lucide-react";
 
 export async function getPosts() {
   const res = await fetch("http://localhost:8000/v2/posts");
@@ -95,6 +97,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           />
         </div>
       </div>
+      <Link
+        to="/raffle"
+        className="inline-flex gap-2 fixed right-6 bottom-6 z-50 rounded-full bg-violet-600 px-5 py-3
+                 font-semibold text-white"
+      >
+        Enter the raffle! <Ticket />
+      </Link>
     </main>
   );
 }

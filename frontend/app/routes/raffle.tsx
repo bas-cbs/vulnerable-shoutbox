@@ -67,7 +67,7 @@ export default function Raffle({ loaderData }: Route.ComponentProps) {
           <b>Register for the raffle to win amazing prices!</b>
           <p>
             The raffle start when 10 users have registered. Only logged in users
-            can register
+            can register.
           </p>
           {token && (
             <button
