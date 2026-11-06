@@ -1,8 +1,6 @@
 import type { Route } from "./+types/home";
-import { Posts, CreatePost } from "../posts/posts";
-import { useState } from "react";
-import { SignIn } from "../signin/signin";
 import { Link } from "react-router";
+import { useState } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -11,7 +9,26 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Home({ params }: Route.ComponentProps) {
+export async function getProfile({ username }) {
+  const res = await fetch(`http://localhost:8000/v2/profile/${username}`, {
+    method: "GET",
+  });
+  if (res.ok) {
+    return await res.json();
+  }
+}
+
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+  return getProfile({ username: params.username });
+}
+
+export function HydrateFallback() {
+  return <div>Loading...</div>;
+}
+
+export default function Profile({ loaderData, params }: Route.ComponentProps) {
+  const [profile, setProfile] = useState(loaderData);
+
   return (
     <main className="pt-16">
       <div className="flex flex-col items-center gap-8">
@@ -21,10 +38,21 @@ export default function Home({ params }: Route.ComponentProps) {
           </Link>
         </header>
         <div className="max-w-[800px] w-full rounded-3xl border border-gray-200 p-6 space-y-4">
-          <div className="rounded border border-gray-200 space-y-4 p-4">
-            <b>{params.name}</b>
-          </div>
-          <p>description</p>
+          {profile ? (
+            <div>
+              <p>
+                <b>{profile.username}</b> ({profile.email})
+              </p>
+              <p>{profile.description}</p>
+            </div>
+          ) : (
+            <div>
+              <p>
+                <b>{params.username}</b>
+              </p>
+              <p>Missing profile description</p>
+            </div>
+          )}
         </div>
       </div>
     </main>
