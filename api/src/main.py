@@ -1,12 +1,12 @@
 """All API Endpoints."""
 
 import sqlite3
-import httpx
 from contextlib import asynccontextmanager
 from datetime import timedelta
 from pathlib import Path
 from typing import Annotated
 
+import httpx
 from fastapi import Depends, FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm  # noqa: TC002
@@ -77,6 +77,11 @@ async def get_token(
         expires_delta=timedelta(minutes=settings.access_token_expire_minutes),
     )
 
+    # OWASP API2:2023
+    if user.username in ["jan", "janine", "bertrand"]:
+        return Token(access_token="FLAG:Welkom123", token_type="bearer")  # noqa: S106
+
+    # OWASP API8:2023
     if user.username == "admin":
         return Token(access_token="FLAG:K3y$ToTh3C4stl3", token_type="bearer")  # noqa: S106
 

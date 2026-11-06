@@ -8,8 +8,8 @@ def test_owasp1(client):
 
 
 def test_owasp2(client):
-    token = get_token(client, username="admin", password="admin")
-    assert token == "FLAG:K3y$ToTh3C4stl3"
+    token = get_token(client, username="jan", password="secret")
+    assert token == "FLAG:Welkom123"
 
 
 def test_owasp3(client):
@@ -52,6 +52,11 @@ def test_owasp7(client):
         "url": "FLAG:Netw0rk3xpl0r3r",
         "http_version": "HTTP/1.1",
     }
+
+
+def test_owasp8(client):
+    token = get_token(client, username="admin", password="admin")
+    assert token == "FLAG:K3y$ToTh3C4stl3"
 
 
 def test_owasp9(client):
