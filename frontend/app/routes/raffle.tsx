@@ -3,9 +3,10 @@ import { Link } from "react-router";
 import { Ticket } from "lucide-react";
 import { useState } from "react";
 import { SignIn } from "../signin/signin";
+import { API_URL } from "../config";
 
 export async function getRaffleReg() {
-  const res = await fetch("http://localhost:8000/v2/raffle");
+  const res = await fetch(`${API_URL}/raffle`);
   return await res.json();
 }
 
@@ -29,7 +30,7 @@ export default function Raffle({ loaderData }: Route.ComponentProps) {
   const emptyRows = Array.from({ length: 10 - raffleReg.length });
 
   async function registerRaffle() {
-    await fetch("http://localhost:8000/v2/raffle", {
+    await fetch(`${API_URL}/raffle`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

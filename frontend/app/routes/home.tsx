@@ -4,9 +4,10 @@ import { Posts, CreatePost } from "../posts/posts";
 import { useState } from "react";
 import { SignIn } from "../signin/signin";
 import { Ticket } from "lucide-react";
+import { API_URL } from "../config";
 
 export async function getPosts() {
-  const res = await fetch("http://localhost:8000/v2/posts");
+  const res = await fetch(`${API_URL}/posts`);
   const posts = await res.json();
   return posts;
 }
@@ -30,7 +31,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   });
 
   async function createPost({ body }) {
-    await fetch("http://localhost:8000/v2/posts", {
+    await fetch(`${API_URL}/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -43,7 +44,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   }
 
   async function deletePost({ id }) {
-    await fetch(`http://localhost:8000/v2/posts/${id}`, {
+    await fetch(`${API_URL}/posts/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -54,7 +55,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   }
 
   async function editPost({ id, content }) {
-    await fetch(`http://localhost:8000/v2/posts/${id}`, {
+    await fetch(`${API_URL}/posts/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

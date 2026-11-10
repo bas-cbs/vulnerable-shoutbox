@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { LogIn, LogOut } from "lucide-react";
 import { Link } from "react-router";
+import { API_URL } from "../config";
 
 export function SignIn({ token, setToken, userInfo, setUserInfo }) {
   async function getUserInfo({ token }) {
-    const res = await fetch("http://localhost:8000/v2/userinfo", {
+    const res = await fetch(`${API_URL}/userinfo`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -21,7 +21,7 @@ export function SignIn({ token, setToken, userInfo, setUserInfo }) {
     params.append("username", user);
     params.append("password", password);
 
-    const res = await fetch(`http://localhost:8000/v2/token`, {
+    const res = await fetch(`${API_URL}/token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",

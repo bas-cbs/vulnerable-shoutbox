@@ -1,6 +1,7 @@
 import type { Route } from "./+types/home";
 import { Link } from "react-router";
 import { useState } from "react";
+import { API_URL, THIRD_PARTY_API_URL } from "../config";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,7 +11,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function getProfile({ username }) {
-  const res = await fetch(`http://localhost:8000/v2/profiles/${username}`, {
+  const res = await fetch(`${API_URL}/profiles/${username}`, {
     method: "GET",
   });
   if (res.ok) {
@@ -40,7 +41,9 @@ export default function Profile({ loaderData, params }: Route.ComponentProps) {
                 <b>{profile.username}</b> ({profile.email})
               </p>
               <p>{profile.description}</p>
-              <p className="text-xs text-gray-500 leading-relaxed">Description sourced from localhost:8001</p>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                Description sourced from {THIRD_PARTY_API_URL}
+              </p>
             </div>
           ) : (
             <div>
