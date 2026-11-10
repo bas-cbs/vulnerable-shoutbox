@@ -13,10 +13,6 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   return getRaffleReg();
 }
 
-export function HydrateFallback() {
-  return <div>Loading...</div>;
-}
-
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Shoutbox" },

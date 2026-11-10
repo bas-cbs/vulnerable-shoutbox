@@ -22,10 +22,6 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   return getProfile({ username: params.username });
 }
 
-export function HydrateFallback() {
-  return <div>Loading...</div>;
-}
-
 export default function Profile({ loaderData, params }: Route.ComponentProps) {
   const [profile, setProfile] = useState(loaderData);
 
