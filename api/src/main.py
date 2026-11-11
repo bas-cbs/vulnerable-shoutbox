@@ -202,7 +202,7 @@ async def profile(username: str) -> dict:
         cursor.execute("SELECT * FROM users_profiles WHERE username = ?", (username,))
         row = dict(cursor.fetchone())
 
-        ext_profile = httpx.get(f"http://localhost:8001/profiles/{username}")
+        ext_profile = httpx.get(f"{settings.third_party_url}/profiles/{username}")
         ext_json = ext_profile.json()
         row["description"] = ext_json["description"]
 
