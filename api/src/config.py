@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     sqlite_db: Path = Path("db.sqlite")
     db_seed_script: Path = Path("./src/tables.sql")
+    httpx_verify: str = ""
 
     model_config = SettingsConfigDict(env_file=".env")
 
