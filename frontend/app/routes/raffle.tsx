@@ -3,12 +3,7 @@ import { Link } from "react-router";
 import { Ticket } from "lucide-react";
 import { useState } from "react";
 import { SignIn } from "../signin/signin";
-import { API_URL } from "../config";
-
-export async function getRaffleReg() {
-  const res = await fetch(`${API_URL}/raffle`);
-  return await res.json();
-}
+import { getRaffleReg } from "../getters";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   return getRaffleReg();

@@ -1,22 +1,14 @@
 import type { Route } from "./+types/home";
 import { Link } from "react-router";
 import { useState } from "react";
-import { API_URL, THIRD_PARTY_API_URL } from "../config";
+import { THIRD_PARTY_API_URL } from "../config";
+import { getProfile } from "../getters";
 
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Shoutbox" },
     { name: "description", content: "Shout whatever you want!" },
   ];
-}
-
-export async function getProfile({ username }) {
-  const res = await fetch(`${API_URL}/profiles/${username}`, {
-    method: "GET",
-  });
-  if (res.ok) {
-    return await res.json();
-  }
 }
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {

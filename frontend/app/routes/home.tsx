@@ -4,13 +4,7 @@ import { Posts, CreatePost } from "../posts/posts";
 import { useState } from "react";
 import { SignIn } from "../signin/signin";
 import { Ticket } from "lucide-react";
-import { API_URL } from "../config";
-
-export async function getPosts() {
-  const res = await fetch(`${API_URL}/posts`);
-  const posts = await res.json();
-  return posts;
-}
+import { getPosts } from "../getters";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   return getPosts();
