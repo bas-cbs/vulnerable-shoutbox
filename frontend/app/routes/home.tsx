@@ -5,6 +5,7 @@ import { useState } from "react";
 import { SignIn } from "../signin/signin";
 import { Ticket } from "lucide-react";
 import { getPosts } from "../getters";
+import { API_URL } from "../config";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   return getPosts();

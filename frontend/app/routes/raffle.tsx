@@ -4,6 +4,7 @@ import { Ticket } from "lucide-react";
 import { useState } from "react";
 import { SignIn } from "../signin/signin";
 import { getRaffleReg } from "../getters";
+import { API_URL } from "../config";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   return getRaffleReg();
