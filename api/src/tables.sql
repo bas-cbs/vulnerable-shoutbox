@@ -55,9 +55,9 @@ LEFT JOIN users ON rafflereg.user_id = users.id;
 
 INSERT OR IGNORE INTO users (id, username, hashed_password) VALUES 
 (1, 'johndoe', '$argon2id$v=19$m=65536,t=3,p=4$wagCPXjifgvUFBzq4hqe3w$CYaIb8sB+wtD+Vu/P4uod1+Qof8h+1g7bbDlBID48Rc'),
-(2, 'janine', '$argon2id$v=19$m=65536,t=3,p=4$wagCPXjifgvUFBzq4hqe3w$CYaIb8sB+wtD+Vu/P4uod1+Qof8h+1g7bbDlBID48Rc'),
-(3, 'bertrand', '$argon2id$v=19$m=65536,t=3,p=4$wagCPXjifgvUFBzq4hqe3w$CYaIb8sB+wtD+Vu/P4uod1+Qof8h+1g7bbDlBID48Rc'),
-(4, 'jan', '$argon2id$v=19$m=65536,t=3,p=4$wagCPXjifgvUFBzq4hqe3w$CYaIb8sB+wtD+Vu/P4uod1+Qof8h+1g7bbDlBID48Rc'),
+(2, 'janine', '$argon2id$v=19$m=65536,t=3,p=4$h+uBvJ+C8zMqP56v1B43/w$nnFTPTI/5hl8DymYmkrRMyL7kvHkah8Ec/kV7WGCAJU'),
+(3, 'bertrand', '$argon2id$v=19$m=65536,t=3,p=4$h+uBvJ+C8zMqP56v1B43/w$nnFTPTI/5hl8DymYmkrRMyL7kvHkah8Ec/kV7WGCAJU'),
+(4, 'jan', '$argon2id$v=19$m=65536,t=3,p=4$h+uBvJ+C8zMqP56v1B43/w$nnFTPTI/5hl8DymYmkrRMyL7kvHkah8Ec/kV7WGCAJU'),
 (5, 'admin', '$argon2id$v=19$m=65536,t=3,p=4$Bqa+5Pq0OBHAsgjA0sqXlA$0W//NxT+dLz/Sqa73UEHcS6aWMs+p2NbewLYxtX5Nf0'),
 (6, 'anonymous', NULL);
 

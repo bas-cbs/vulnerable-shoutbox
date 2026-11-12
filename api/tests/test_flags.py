@@ -8,7 +8,7 @@ def test_owasp1(client):
 
 
 def test_owasp2(client):
-    token = get_token(client, username="jan", password="secret")
+    token = get_token(client, username="jan", password="password")
     assert token == "FLAG:Welkom123"
 
 
