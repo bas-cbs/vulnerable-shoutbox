@@ -27,24 +27,25 @@ export default function Profile({ loaderData, params }: Route.ComponentProps) {
           </Link>
         </header>
         <div className="max-w-[800px] w-full rounded-3xl border border-gray-200 p-6 space-y-4">
-          {profile ? (
-            <div>
-              <p>
-                <b>{profile.username}</b> ({profile.email})
-              </p>
-              <p>{profile.description}</p>
-              <p className="text-xs text-gray-500 leading-relaxed">
-                Description sourced from {THIRD_PARTY_API_URL}
-              </p>
+          <div>
+            <div className="space-y-4">
+              <div>
+                <h2 className="truncate text-2xl font-semibold">
+                  {params.username}
+                </h2>
+                <p className="truncate text-sm text-gray-500">
+                  {profile?.email ?? "No email registered"}
+                </p>
+              </div>
+              <hr className="border-gray-100" />
+              <div className="space-y-2">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                  Profile description
+                </h3>
+                <p>{profile?.description ?? "Missing profile description"}</p>
+              </div>
             </div>
-          ) : (
-            <div>
-              <p>
-                <b>{params.username}</b>
-              </p>
-              <p>Missing profile description</p>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </main>
