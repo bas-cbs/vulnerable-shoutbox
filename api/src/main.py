@@ -229,7 +229,7 @@ async def raffle_registrations() -> list[RaffleRegistration]:
 
 @app_v2.post("/raffle", status_code=status.HTTP_201_CREATED)
 async def register_for_raffle(
-    current_user: Annotated[User, Depends(get_current_user_optional)],
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     """Register for raffle."""
     with sqlite3.connect(settings.sqlite_db) as conn:
@@ -253,7 +253,7 @@ async def register_for_raffle(
 
 @app_v2.post("/upload_photo", status_code=status.HTTP_201_CREATED)
 async def upload_photo(
-    current_user: Annotated[User, Depends(get_current_user_optional)],
+    current_user: Annotated[User, Depends(get_current_user)],
     photo_url: PhotoUrl,
 ) -> dict:
     """Upload a profile photo."""
@@ -265,8 +265,15 @@ async def upload_photo(
             "http_version": "HTTP/1.1",
         }
 
+    if any(x in photo_url.url for x in ["http://", "https://"]):
+        return {
+            "status_code:": status.HTTP_200_OK,
+            "url": photo_url.url,
+            "http_version": "HTTP/1.1",
+        }
+
     return {
-        "status_code:": status.HTTP_200_OK,
+        "status_code:": status.HTTP_404_NOT_FOUND,
         "url": photo_url.url,
         "http_version": "HTTP/1.1",
     }
