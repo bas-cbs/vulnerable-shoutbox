@@ -48,6 +48,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       >
         Enter the raffle! <Ticket />
       </Link>
+      <p hidden>FLAG:Fr33b33</p>
     </main>
   );
 }
