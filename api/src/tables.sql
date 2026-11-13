@@ -63,7 +63,8 @@ INSERT OR IGNORE INTO users (id, username, hashed_password) VALUES
 INSERT OR IGNORE INTO profiles (id, user_id, email, bsn) VALUES 
 (1, 2, 'janine@gmail.com', NULL),
 (2, 3, 'bertrand@gmail.com', NULL),
-(3, 4, 'jan@example.com', 'FLAG:S3ns!tiveInf0');
+(3, 4, 'jan@example.com', 'FLAG:S3ns!tiveInf0'),
+(4, 1, 'johndoe@protonmail.com', NULL);
 
 INSERT OR IGNORE INTO posts (id, user_id, content) VALUES 
 (1, 2, 'hello world'),
