@@ -5,6 +5,8 @@ import { useState } from "react";
 import { SignIn } from "../signin/signin";
 import { getRaffleReg } from "../getters";
 import { API_URL } from "../config";
+import { useContext } from "react";
+import { UserContext } from "../context";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   return getRaffleReg();
@@ -19,11 +21,9 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Raffle({ loaderData }: Route.ComponentProps) {
   const [raffleReg, setRaffleReg] = useState(loaderData);
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [userInfo, setUserInfo] = useState({
-    username: localStorage.getItem("username"),
-  });
+  const { user, token } = useContext(UserContext);
   const emptyRows = Array.from({ length: 10 - raffleReg.length });
+  const alreadyRegistered = raffleReg.some((reg) => reg.username === user);
 
   async function registerRaffle() {
     await fetch(`${API_URL}/raffle`, {
@@ -50,19 +50,13 @@ export default function Raffle({ loaderData }: Route.ComponentProps) {
             <h1 className="font-mono text-3xl italic">shoutbox</h1>
           </Link>
         </header>
-        <SignIn
-          token={token}
-          setToken={setToken}
-          userInfo={userInfo}
-          setUserInfo={setUserInfo}
-        />
         <div className="max-w-[800px] w-full rounded-3xl border border-gray-200 p-6 space-y-4">
           <b>Register for the raffle to win amazing prices!</b>
           <p>
             The raffle start when 10 users have registered. Only logged in users
             can register.
           </p>
-          {token && (
+          {token && !alreadyRegistered && (
             <button
               onClick={handleRaffleReg}
               disabled={token ? false : true}
