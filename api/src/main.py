@@ -79,13 +79,14 @@ async def get_token(
 
     # OWASP API2:2023
     if user.username in ["jan", "janine", "bertrand"]:
-        return Token(access_token="FLAG:Welkom123", token_type="bearer")  # noqa: S106
-
+        flag = "FLAG:Welkom123"
     # OWASP API8:2023
-    if user.username == "admin":
-        return Token(access_token="FLAG:K3y$ToTh3C4stl3", token_type="bearer")  # noqa: S106
+    elif user.username == "admin":
+        flag = "FLAG:K3y$ToTh3C4stl3"
+    else:
+        flag = None
 
-    return Token(access_token=access_token, token_type="bearer")  # noqa: S106
+    return Token(access_token=access_token, token_type=flag or "bearer")
 
 
 @app_v2.get("/userinfo")

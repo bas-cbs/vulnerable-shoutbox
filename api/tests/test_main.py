@@ -21,7 +21,7 @@ def test_create_anonymous_post(client):
     ]
 
 
-def get_token(client, username="johndoe", password="secret"):
+def get_token(client, username="johndoe", password="secret", full_response=False):
     response = client.post(
         "/v2/token",
         data={"username": username, "password": password},
@@ -29,6 +29,8 @@ def get_token(client, username="johndoe", password="secret"):
     )
     assert response.status_code == 200
 
+    if full_response:
+        return response.json()
     return response.json()["access_token"]
 
 

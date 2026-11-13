@@ -8,8 +8,8 @@ def test_owasp1(client):
 
 
 def test_owasp2(client):
-    token = get_token(client, username="jan", password="password")
-    assert token == "FLAG:Welkom123"
+    token = get_token(client, username="jan", password="password", full_response=True)
+    assert token["token_type"] == "FLAG:Welkom123"
 
 
 def test_owasp3(client):
@@ -55,8 +55,8 @@ def test_owasp7(client):
 
 
 def test_owasp8(client):
-    token = get_token(client, username="admin", password="admin")
-    assert token == "FLAG:K3y$ToTh3C4stl3"
+    token = get_token(client, username="admin", password="admin", full_response=True)
+    assert token["token_type"] == "FLAG:K3y$ToTh3C4stl3"
 
 
 def test_owasp9(client):
