@@ -3,10 +3,36 @@ import { Pencil, Trash, X, Check, Send } from "lucide-react";
 import { Link } from "react-router";
 import { useContext } from "react";
 import { UserContext } from "../context";
+import { getPosts } from "../getters";
+import { API_URL } from "../config";
 
-export function Posts({ postData, deletePost, editPost, userInfo }) {
+export function Posts({ postData, setPosts }) {
   const [editPostId, setEditPostId] = useState(null);
-  const { user } = useContext(UserContext);
+  const { user, token } = useContext(UserContext);
+
+  async function deletePost({ id }) {
+    await fetch(`${API_URL}/posts/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    setPosts(await getPosts());
+  }
+
+  async function editPost({ id, content }) {
+    await fetch(`${API_URL}/posts/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ content: content }),
+    });
+
+    setPosts(await getPosts());
+  }
 
   function handleEdit({ id, e }) {
     e.preventDefault();
@@ -78,7 +104,22 @@ export function Posts({ postData, deletePost, editPost, userInfo }) {
   );
 }
 
-export function CreatePost({ createPost }) {
+export function CreatePost({ setPosts }) {
+  const { token } = useContext(UserContext);
+
+  async function createPost({ body }) {
+    await fetch(`${API_URL}/posts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ content: body }),
+    });
+
+    setPosts(await getPosts());
+  }
+
   function handleNewPost(e) {
     e.preventDefault();
 

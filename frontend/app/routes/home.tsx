@@ -21,45 +21,8 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { user, token } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [posts, setPosts] = useState(loaderData);
-
-  async function createPost({ body }) {
-    await fetch(`${API_URL}/posts`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ content: body }),
-    });
-
-    setPosts(await getPosts());
-  }
-
-  async function deletePost({ id }) {
-    await fetch(`${API_URL}/posts/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    setPosts(await getPosts());
-  }
-
-  async function editPost({ id, content }) {
-    await fetch(`${API_URL}/posts/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ content: content }),
-    });
-
-    setPosts(await getPosts());
-  }
 
   return (
     <main className="pt-16">
@@ -67,16 +30,15 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <header>
           <h1 className="font-mono text-3xl italic">shoutbox</h1>
         </header>
-        {`TEST ${user}`}
         <SignIn />
         <div className="max-w-[800px] w-full rounded-3xl border border-gray-200 p-6 space-y-4">
           <div className="rounded border border-gray-200 space-y-4 p-4">
             <span className="flex flex-row items-center">
               <b>{user ?? "anonymous"}</b>:&nbsp;
-              <CreatePost createPost={createPost} />
+              <CreatePost setPosts={setPosts} />
             </span>
           </div>
-          <Posts postData={posts} deletePost={deletePost} editPost={editPost} />
+          <Posts postData={posts} setPosts={setPosts} />
         </div>
       </div>
       <Link
