@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home";
 import { Link } from "react-router";
+import { Upload } from "lucide-react";
 import { useState } from "react";
 import { THIRD_PARTY_API_URL } from "../config";
 import { getProfile } from "../getters";
@@ -36,6 +37,26 @@ export default function Profile({ loaderData, params }: Route.ComponentProps) {
                 <p className="truncate text-sm text-gray-500">
                   {profile?.email ?? "No email registered"}
                 </p>
+              </div>
+              <hr className="border-gray-100" />
+              <div className="space-y-2">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                  Profile photo upload
+                </h3>
+                <form>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      id="url"
+                      name="url"
+                      placeholder="url"
+                      className="border border-gray-300 y-2 p-2"
+                    />
+                    <button type="submit">
+                      <Upload />
+                    </button>
+                  </div>
+                </form>
               </div>
               <hr className="border-gray-100" />
               <div className="space-y-2">
