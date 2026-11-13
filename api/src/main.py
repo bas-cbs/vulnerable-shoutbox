@@ -1,6 +1,7 @@
 """All API Endpoints."""
 
 import sqlite3
+import warnings
 from contextlib import asynccontextmanager
 from datetime import timedelta
 from pathlib import Path
@@ -203,12 +204,15 @@ async def profile(username: str) -> dict:
         cursor.execute("SELECT * FROM users_profiles WHERE username = ?", (username,))
         row = dict(cursor.fetchone())
 
-        ext_profile = httpx.get(
-            f"{settings.third_party_url}/profiles/{username}",
-            verify=settings.httpx_verify or True,
-        )
-        ext_json = ext_profile.json()
-        row["description"] = ext_json["description"]
+        try:
+            ext_profile = httpx.get(
+                f"{settings.third_party_url}/profiles/{username}",
+                verify=settings.httpx_verify or True,
+            )
+            ext_json = ext_profile.json()
+            row["description"] = ext_json["description"]
+        except:
+            warnings.warn("No description received")
 
         return row
 

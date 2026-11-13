@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS profiles (
     id INTEGER PRIMARY KEY,
     user_id INTEGER,
     email TEXT,
-    description TEXT,
     bsn TEXT,
     CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id)
 );
@@ -43,7 +42,7 @@ FROM posts
 LEFT JOIN users ON posts.user_id = users.id;
 
 CREATE VIEW IF NOT EXISTS users_profiles AS
-SELECT profiles.id, users.username, profiles.email, profiles.description, profiles.bsn
+SELECT profiles.id, users.username, profiles.email, profiles.bsn
 FROM profiles
 LEFT JOIN users ON profiles.user_id = users.id;
 
@@ -61,10 +60,10 @@ INSERT OR IGNORE INTO users (id, username, hashed_password) VALUES
 (5, 'admin', '$argon2id$v=19$m=65536,t=3,p=4$Bqa+5Pq0OBHAsgjA0sqXlA$0W//NxT+dLz/Sqa73UEHcS6aWMs+p2NbewLYxtX5Nf0'),
 (6, 'anonymous', NULL);
 
-INSERT OR IGNORE INTO profiles (id, user_id, email, description, bsn) VALUES 
-(1, 2, 'janine@gmail.com', 'Thank for checking my profile!', NULL),
-(2, 3, 'bertrand@gmail.com', 'Wonderful days :)', NULL),
-(3, 4, 'jan@example.com', 'Not sure what to write here...', 'FLAG:S3ns!tiveInf0');
+INSERT OR IGNORE INTO profiles (id, user_id, email, bsn) VALUES 
+(1, 2, 'janine@gmail.com', NULL),
+(2, 3, 'bertrand@gmail.com', NULL),
+(3, 4, 'jan@example.com', 'FLAG:S3ns!tiveInf0');
 
 INSERT OR IGNORE INTO posts (id, user_id, content) VALUES 
 (1, 2, 'hello world'),
