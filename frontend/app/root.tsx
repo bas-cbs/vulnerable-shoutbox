@@ -9,6 +9,9 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { useContext } from "react";
+import { useState } from "react";
+import { UserContext } from "./context";
 
 export function HydrateFallback() {
   return <div>Loading...</div>;
@@ -35,7 +38,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const [user, setUser] = useState(localStorage.getItem("username"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
+  function StoreSignIn({ username, token }) {
+    localStorage.setItem("username", username);
+    localStorage.setItem("token", token);
+    setUser(username);
+    setToken(token);
+  }
+
+  function Logout() {
+    localStorage.removeItem("username");
+    localStorage.removeItem("token");
+    setUser(undefined);
+    setToken(undefined);
+  }
+
+  return (
+    <UserContext value={{ user, token, StoreSignIn, Logout }}>
+      <Outlet />
+    </UserContext>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

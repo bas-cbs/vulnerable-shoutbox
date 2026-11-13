@@ -6,6 +6,8 @@ import { SignIn } from "../signin/signin";
 import { Ticket } from "lucide-react";
 import { getPosts } from "../getters";
 import { API_URL } from "../config";
+import { useContext } from "react";
+import { UserContext } from "../context";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   return getPosts();
@@ -19,11 +21,8 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
+  const { user, token } = useContext(UserContext);
   const [posts, setPosts] = useState(loaderData);
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [userInfo, setUserInfo] = useState({
-    username: localStorage.getItem("username"),
-  });
 
   async function createPost({ body }) {
     await fetch(`${API_URL}/posts`, {
@@ -68,25 +67,16 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <header>
           <h1 className="font-mono text-3xl italic">shoutbox</h1>
         </header>
-        <SignIn
-          token={token}
-          setToken={setToken}
-          userInfo={userInfo}
-          setUserInfo={setUserInfo}
-        />
+        {`TEST ${user}`}
+        <SignIn />
         <div className="max-w-[800px] w-full rounded-3xl border border-gray-200 p-6 space-y-4">
           <div className="rounded border border-gray-200 space-y-4 p-4">
             <span className="flex flex-row items-center">
-              <b>{userInfo.username ?? "anonymous"}</b>:&nbsp;
+              <b>{user ?? "anonymous"}</b>:&nbsp;
               <CreatePost createPost={createPost} />
             </span>
           </div>
-          <Posts
-            postData={posts}
-            deletePost={deletePost}
-            editPost={editPost}
-            userInfo={userInfo}
-          />
+          <Posts postData={posts} deletePost={deletePost} editPost={editPost} />
         </div>
       </div>
       <Link

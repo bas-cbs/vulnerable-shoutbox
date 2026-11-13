@@ -1,8 +1,12 @@
 import { LogIn, LogOut } from "lucide-react";
 import { Link } from "react-router";
 import { API_URL } from "../config";
+import { useContext } from "react";
+import { UserContext } from "../context";
 
-export function SignIn({ token, setToken, userInfo, setUserInfo }) {
+export function SignIn({}) {
+  const { user, token, StoreSignIn, Logout } = useContext(UserContext);
+
   async function getUserInfo({ token }) {
     const res = await fetch(`${API_URL}/userinfo`, {
       method: "GET",
@@ -46,21 +50,10 @@ export function SignIn({ token, setToken, userInfo, setUserInfo }) {
     if (user && password) {
       const token = await getToken({ user: user, password: password });
       if (token) {
-        setToken(token);
-        localStorage.setItem("token", token);
         const userinfo = await getUserInfo({ token: token });
-
-        setUserInfo({ username: userinfo.username });
-        localStorage.setItem("username", userinfo.username);
+        StoreSignIn({ username: userinfo.username, token: token });
       }
     }
-  }
-
-  function handleSignOut() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    setToken(null);
-    setUserInfo({});
   }
 
   return (
@@ -69,11 +62,11 @@ export function SignIn({ token, setToken, userInfo, setUserInfo }) {
         <div className="flex gap-2">
           <p>
             Signed in as:{" "}
-            <Link to={`/profile/${userInfo.username}`}>
-              <b>{userInfo.username}</b>
+            <Link to={`/profile/${user}`}>
+              <b>{user}</b>
             </Link>{" "}
           </p>
-          <button onClick={handleSignOut}>
+          <button onClick={Logout}>
             <LogOut />
           </button>
         </div>

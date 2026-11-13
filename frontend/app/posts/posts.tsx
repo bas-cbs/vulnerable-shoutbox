@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Pencil, Trash, X, Check, Send } from "lucide-react";
 import { Link } from "react-router";
+import { useContext } from "react";
+import { UserContext } from "../context";
 
 export function Posts({ postData, deletePost, editPost, userInfo }) {
   const [editPostId, setEditPostId] = useState(null);
+  const { user } = useContext(UserContext);
 
   function handleEdit({ id, e }) {
     e.preventDefault();
@@ -56,7 +59,7 @@ export function Posts({ postData, deletePost, editPost, userInfo }) {
                   </Link>
                   : {content}
                 </span>
-                {userInfo.username == username && (
+                {user == username && (
                   <span>
                     <button onClick={() => setEditPostId(id)}>
                       <Pencil />
