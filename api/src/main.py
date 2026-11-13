@@ -260,20 +260,20 @@ async def upload_photo(
     # OWASP API7:2023
     if any(x in photo_url.url for x in ["localhost", "127.0.0.1"]):
         return {
-            "status_code:": status.HTTP_200_OK,
+            "status_code": status.HTTP_200_OK,
             "url": "FLAG:Netw0rk3xpl0r3r",
             "http_version": "HTTP/1.1",
         }
 
     if any(x in photo_url.url for x in ["http://", "https://"]):
         return {
-            "status_code:": status.HTTP_200_OK,
+            "status_code": status.HTTP_200_OK,
             "url": photo_url.url,
             "http_version": "HTTP/1.1",
         }
 
     return {
-        "status_code:": status.HTTP_404_NOT_FOUND,
+        "status_code": status.HTTP_404_NOT_FOUND,
         "url": photo_url.url,
         "http_version": "HTTP/1.1",
     }
