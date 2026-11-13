@@ -81,7 +81,7 @@ export function SignIn({}) {
               className="border border-gray-300 y-2 p-2"
             />
             <input
-              type="text"
+              type="password"
               id="password"
               name="password"
               placeholder="password"
